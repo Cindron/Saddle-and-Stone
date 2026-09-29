@@ -1,0 +1,14 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: saddle-stone-web
+    restart: unless-stopped
+    networks:
+      - saddle-stone-net
+
+networks:
+  saddle-stone-net:
+    name: saddle-stone-net
+    driver: bridge

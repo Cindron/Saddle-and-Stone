@@ -1,0 +1,4 @@
+# Replace saddle-stone.example.com with the final public hostname.
+saddle-stone.example.com {
+    reverse_proxy saddle-stone-web:80
+}
