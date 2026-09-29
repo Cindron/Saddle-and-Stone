@@ -1,4 +1,3 @@
-# Replace saddle-stone.example.com with the final public hostname.
-saddle-stone.example.com {
+saddleandstone.cindron.ca {
     reverse_proxy saddle-stone-web:80
 }

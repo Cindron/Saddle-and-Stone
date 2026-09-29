@@ -2,6 +2,16 @@
 
 Initial static homepage based on the approved rustic farmhouse concept.
 
+## Preview hostname
+
+The temporary client-preview hostname is:
+
+```text
+https://saddleandstone.cindron.ca
+```
+
+This staging build is intentionally marked `noindex, nofollow` and includes a restrictive `robots.txt` so search engines should not index it while the client reviews the site.
+
 ## Current status
 - Responsive homepage is built and runnable.
 - Navigation, hero, About Faith, Services, Upcoming Sales, Gallery teaser, and footer are included.
@@ -13,10 +23,11 @@ Initial static homepage based on the approved rustic farmhouse concept.
 - `index.html` — homepage structure/content
 - `styles.css` — all layout and responsive styling
 - `script.js` — mobile navigation and active section state
+- `robots.txt` — blocks staging-site crawling
 - `Dockerfile` — production Nginx image
 - `docker-compose.yml` — isolated Saddle & Stone container/network
 - `deploy/nginx.conf` — Nginx static-site config
-- `deploy/Caddyfile.snippet.example` — reverse-proxy template for the existing VPS Caddy setup
+- `deploy/Caddyfile.snippet.example` — Caddy route for the temporary preview hostname
 
 ## Local preview
 
@@ -32,7 +43,7 @@ Then visit `http://localhost:8080`.
 
 The deployment files mirror the existing Cindron VPS pattern: isolated Docker container + isolated Docker network + the existing Caddy container for public HTTPS.
 
-Planned server path:
+Server path:
 
 ```text
 /opt/saddle-stone
@@ -54,7 +65,13 @@ Attach the existing Caddy container to the site's network:
 docker network connect saddle-stone-net tornfca-caddy-1
 ```
 
-Then add the final hostname to the live Caddyfile using `deploy/Caddyfile.snippet.example` as the template.
+Add this block to the live Caddyfile:
+
+```caddy
+saddleandstone.cindron.ca {
+    reverse_proxy saddle-stone-web:80
+}
+```
 
 Validate and reload Caddy:
 
@@ -63,7 +80,11 @@ docker exec tornfca-caddy-1 caddy validate --config /etc/caddy/Caddyfile
 docker exec tornfca-caddy-1 caddy reload --config /etc/caddy/Caddyfile
 ```
 
-Future updates:
+### DNS
+
+Create a DNS record for `saddleandstone.cindron.ca` pointing to the same public VPS IP already serving the other Cindron-hosted sites. Once DNS resolves, Caddy can obtain HTTPS automatically.
+
+## Future updates
 
 ```bash
 cd /opt/saddle-stone
@@ -74,4 +95,4 @@ docker ps --filter name=saddle-stone-web
 
 ## Next planned step
 
-Choose the preview/final public hostname, add the Caddy route and DNS record, then deploy this build to the OVH VPS. After the shell is live, replace placeholder photography/contact details and refine content from Faith's final approvals.
+Bring the temporary preview hostname online, have Faith review the actual responsive website, then replace placeholder photos/contact details and make the next design/content revisions before the final domain is purchased.
