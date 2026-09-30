@@ -1054,3 +1054,103 @@ body:before{
   .heritage-restored-wordmark{width:min(220px,92%) !important}
   .contact-restored-wordmark{width:min(185px,80%) !important}
 }
+
+
+/* v0.5.9 — final single transparent logo asset
+   All visible branding uses one validated WebP with alpha, derived directly
+   from the client's approved transparent master. No split crest/wordmark. */
+.brand-final{
+  display:flex !important;
+  align-items:center !important;
+  min-width:auto !important;
+  height:70px !important;
+  overflow:visible !important;
+}
+.brand-final-logo{
+  display:block !important;
+  width:auto !important;
+  height:66px !important;
+  max-width:150px !important;
+  object-fit:contain !important;
+  background:transparent !important;
+}
+
+.footer-brand-final{
+  display:flex !important;
+  align-items:center !important;
+  min-width:0 !important;
+  overflow:visible !important;
+}
+.footer-final-logo{
+  display:block !important;
+  width:auto !important;
+  height:58px !important;
+  max-width:135px !important;
+  object-fit:contain !important;
+  background:transparent !important;
+}
+
+.heritage-mark-final{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.heritage-mark-final .heritage-final-logo{
+  display:block !important;
+  width:min(240px,88%) !important;
+  height:auto !important;
+  max-width:100% !important;
+  margin:0 auto 8px !important;
+  object-fit:contain !important;
+  background:transparent !important;
+  filter:none !important;
+}
+
+.contact-brand-final{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin:0 auto 10px !important;
+}
+.contact-brand-final .contact-final-logo{
+  display:block !important;
+  width:min(210px,82%) !important;
+  height:auto !important;
+  max-width:100% !important;
+  margin:0 auto !important;
+  object-fit:contain !important;
+  background:transparent !important;
+  filter:none !important;
+}
+
+/* Explicitly retire every previous split/broken logo implementation. */
+.brand-restored-crest,
+.brand-restored-wordmark,
+.footer-restored-crest,
+.footer-restored-wordmark,
+.heritage-restored-crest,
+.heritage-restored-wordmark,
+.contact-restored-crest,
+.contact-restored-wordmark,
+.brand-crest,
+.footer-crest,
+.brand-wordmark-crop,
+.footer-wordmark-crop,
+.heritage-full-logo,
+.contact-full-logo{
+  display:none !important;
+}
+
+@media(max-width:800px){
+  .brand-final{height:62px !important}
+  .brand-final-logo{height:58px !important;max-width:132px !important}
+  .footer-final-logo{height:52px !important;max-width:120px !important}
+}
+@media(max-width:540px){
+  .brand-final{height:58px !important}
+  .brand-final-logo{height:54px !important;max-width:124px !important}
+  .footer-final-logo{height:48px !important;max-width:112px !important}
+  .heritage-mark-final .heritage-final-logo{width:min(220px,90%) !important}
+  .contact-brand-final .contact-final-logo{width:min(195px,84%) !important}
+}

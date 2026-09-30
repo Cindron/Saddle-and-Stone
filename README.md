@@ -1,10 +1,10 @@
-# Saddle & Stone Estate Sales — v0.5.8
+# Saddle & Stone Estate Sales — v0.5.9
 
 Preview: https://saddleandstone.cindron.ca
 
 The staging site remains `noindex, nofollow`.
 
-## v0.5.8 — verified transparent wordmark repair
+## v0.5.9 — single transparent logo asset
 
 The site is now structured as a professional multipage website rather than one long homepage.
 
@@ -159,3 +159,20 @@ The already-working transparent crest remains:
 - `assets/brand-crest-v2.png`
 
 Header, footer, homepage heritage panel and contact card all use the same verified pair. No black background and no large-image CSS cropping.
+
+
+## v0.5.9 final logo-path correction
+The split crest + wordmark approach was still producing broken-image placeholders on the live site.
+
+This build removes that approach completely from the rendered HTML.
+
+One validated transparent WebP, created directly from Faith's approved transparent master logo, is now used everywhere:
+- `assets/saddle-stone-logo-final.webp`
+
+Used in:
+- Header on all five public pages
+- Footer on all five public pages
+- Homepage heritage/contact brand panel
+- Contact page brand card
+
+There are no separate wordmark requests and no CSS cropping. The logo is displayed as the full approved artwork with its transparent background.
