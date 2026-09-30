@@ -24,10 +24,10 @@ The site is now structured as a professional multipage website rather than one l
 - Cleaner spacing and hierarchy for a more premium, established feel
 - Mobile layouts remain intentionally designed, not simply compressed desktop layouts
 
-### Logo repair
+### Logo repair — v0.5.1
 The previous `.webp` logo assets contained PNG image data but were served with a WebP MIME type, which caused the broken logo seen in the staging screenshot. v0.5 reuses the same transparent image data under the correct:
-- `assets/brand-crest.png`
-- `assets/brand-logo.png`
+- `assets/brand-crest-v2.png`
+- `assets/brand-logo-v2.png`
 
 Header/footer use the smaller crest. Contact areas use the full transparent logo.
 
