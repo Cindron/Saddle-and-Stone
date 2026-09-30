@@ -1002,3 +1002,55 @@ body:before{
   .contact-restored-crest{width:68px !important;height:68px !important}
   .contact-restored-wordmark{width:min(185px,80%) !important}
 }
+
+
+/* v0.5.8 — corrected transparent logo asset
+   Keep the already-live crest and use a newly verified transparent PNG
+   wordmark cropped directly from the client master logo. */
+.brand-restored-wordmark,
+.footer-restored-wordmark,
+.heritage-restored-wordmark,
+.contact-restored-wordmark{
+  display:block !important;
+  background:transparent !important;
+  object-fit:contain !important;
+}
+
+.brand-restored-wordmark{
+  width:178px !important;
+  height:auto !important;
+}
+.footer-restored-wordmark{
+  width:145px !important;
+  height:auto !important;
+}
+.heritage-restored-wordmark{
+  width:min(250px,92%) !important;
+  height:auto !important;
+  margin:0 auto 8px !important;
+}
+.contact-restored-wordmark{
+  width:min(205px,78%) !important;
+  height:auto !important;
+  margin:0 auto !important;
+}
+
+/* Disable the failed v0.5.5 full-logo/crop path, but not the v0.5.8 assets. */
+.brand-official,
+.brand-wordmark-crop,
+.footer-brand-official,
+.footer-wordmark-crop,
+.heritage-full-logo,
+.contact-full-logo{
+  display:none !important;
+}
+
+@media(max-width:800px){
+  .brand-restored-wordmark{width:153px !important}
+  .footer-restored-wordmark{width:132px !important}
+}
+@media(max-width:540px){
+  .brand-restored-wordmark{width:140px !important}
+  .heritage-restored-wordmark{width:min(220px,92%) !important}
+  .contact-restored-wordmark{width:min(185px,80%) !important}
+}

@@ -1,10 +1,10 @@
-# Saddle & Stone Estate Sales — v0.5.6
+# Saddle & Stone Estate Sales — v0.5.8
 
 Preview: https://saddleandstone.cindron.ca
 
 The staging site remains `noindex, nofollow`.
 
-## v0.5.6 — visible transparent branding restore
+## v0.5.8 — verified transparent wordmark repair
 
 The site is now structured as a professional multipage website rather than one long homepage.
 
@@ -147,3 +147,15 @@ This build removes that failed path from the rendered site and uses:
 The header, footer, homepage heritage panel and contact brand card now use those two transparent pieces as one lockup. No black logo background and no CSS crop of a large square image.
 
 This is a stability fix only; the approved cottage/farmhouse visual direction is unchanged.
+
+
+## v0.5.8 verified logo repair
+The latest live screenshots showed the crest loading while the wordmark image itself was broken.
+
+This build replaces that failed wordmark file with a newly verified transparent PNG cropped directly from the client's supplied master logo:
+- `assets/brand-wordmark-v5.png`
+
+The already-working transparent crest remains:
+- `assets/brand-crest-v2.png`
+
+Header, footer, homepage heritage panel and contact card all use the same verified pair. No black background and no large-image CSS cropping.
