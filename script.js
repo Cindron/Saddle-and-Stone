@@ -21,7 +21,7 @@ const navLinks = [...document.querySelectorAll('.main-nav a')];
 const updateActiveNav = () => {
   let current = 'top';
   for (const section of sections) {
-    if (window.scrollY >= section.offsetTop - 160) current = section.id;
+    if (window.scrollY >= section.offsetTop - 150) current = section.id;
   }
   navLinks.forEach((link) => {
     const target = link.getAttribute('href').replace('#', '');
