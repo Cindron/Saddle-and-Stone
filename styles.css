@@ -777,3 +777,102 @@ body:before{
   .heritage-mark .heritage-full-logo{width:min(240px,92%)}
   .contact-visual-card .contact-full-logo{width:min(190px,76%);margin-top:0}
 }
+
+
+/* v0.5.5 — emergency logo restoration using verified transparent source */
+.brand-official{
+  min-width:0;
+  width:auto;
+  height:62px;
+  display:flex;
+  align-items:center;
+  overflow:visible;
+}
+
+/* Same official square artwork, cropped only to its lower wordmark for the header.
+   This keeps the header compact and removes the awkward clipped crest treatment. */
+.brand-wordmark-crop{
+  position:relative;
+  display:block;
+  width:190px;
+  height:48px;
+  overflow:hidden;
+  background:transparent;
+}
+.brand-wordmark-crop img{
+  position:absolute;
+  width:190px;
+  height:auto;
+  max-width:none;
+  left:0;
+  top:-127px;
+  background:transparent;
+}
+
+.footer-brand-official{
+  min-width:190px;
+  height:48px;
+  overflow:visible;
+}
+.footer-wordmark-crop{
+  position:relative;
+  display:block;
+  width:180px;
+  height:46px;
+  overflow:hidden;
+  background:transparent;
+}
+.footer-wordmark-crop img{
+  position:absolute;
+  width:180px;
+  height:auto;
+  max-width:none;
+  left:0;
+  top:-120px;
+  background:transparent;
+}
+
+/* Full logo presentations use the same exact transparent artwork with no clipping. */
+.heritage-mark .heritage-full-logo{
+  display:block !important;
+  width:min(275px,92%) !important;
+  height:auto !important;
+  max-width:100% !important;
+  margin:0 auto 10px !important;
+  object-fit:contain !important;
+  background:transparent !important;
+}
+.contact-visual-card .contact-full-logo{
+  display:block !important;
+  width:min(215px,76%) !important;
+  height:auto !important;
+  max-width:100% !important;
+  margin:0 auto 8px !important;
+  object-fit:contain !important;
+  background:transparent !important;
+  filter:none !important;
+}
+
+/* Retire the old crest hacks completely. */
+.brand-crest,
+.footer-crest,
+.brand-type{
+  display:none !important;
+}
+
+@media(max-width:800px){
+  .brand-official{height:54px}
+  .brand-wordmark-crop{width:166px;height:42px}
+  .brand-wordmark-crop img{width:166px;top:-111px}
+  .footer-brand-official{min-width:170px;height:44px}
+  .footer-wordmark-crop{width:165px;height:42px}
+  .footer-wordmark-crop img{width:165px;top:-110px}
+}
+@media(max-width:540px){
+  .brand-wordmark-crop{width:150px;height:39px}
+  .brand-wordmark-crop img{width:150px;top:-100px}
+  .footer-wordmark-crop{width:155px;height:40px}
+  .footer-wordmark-crop img{width:155px;top:-103px}
+  .heritage-mark .heritage-full-logo{width:min(245px,92%) !important}
+  .contact-visual-card .contact-full-logo{width:min(195px,78%) !important}
+}
