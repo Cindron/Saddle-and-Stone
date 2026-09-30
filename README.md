@@ -1,39 +1,67 @@
-# Saddle & Stone Estate Sales — Homepage v0.4
+# Saddle & Stone Estate Sales — v0.5
 
-Temporary client-review build:
-https://saddleandstone.cindron.ca
+Preview: https://saddleandstone.cindron.ca
 
-The staging site remains intentionally `noindex, nofollow`.
+The staging site remains `noindex, nofollow`.
 
-## v0.4 — professional rebuild
+## v0.5 — multipage cozy cottage / farmhouse design pass
 
-This version was rebuilt from the approved Saddle & Stone mock-up rather than iterating on the previous barn-heavy layout.
+The site is now structured as a professional multipage website rather than one long homepage.
 
-### Design direction
-- Warm cream / parchment background
-- Deep olive, copper/rust and antique-brass accents
+### Public pages
+- `index.html` — concise homepage / brand overview
+- `about.html` — Faith's story and Saddle & Stone values
+- `services.html` — detailed service offering, process and FAQs
+- `sales.html` — visual framework for upcoming sales, calendar and item catalog
+- `contact.html` — contact details, service area and social links
+
+### Brand / visual direction
+- Cozy cottage / farmhouse vintage aesthetic
+- Warm ivory and parchment backgrounds
+- Deep sage / olive, rust-copper and antique-brass accents
 - Editorial serif typography
-- High-quality farmhouse / cottage imagery
-- Structured spacing and clear visual hierarchy
-- Subtle old-country character rather than literal barn-wall styling
-- Mobile layout designed separately for a polished stacked presentation
+- Layered photo-card treatments and subtle paper texture
+- Cleaner spacing and hierarchy for a more premium, established feel
+- Mobile layouts remain intentionally designed, not simply compressed desktop layouts
 
-### Brand fixes
-- Added a transparent-background Saddle & Stone crest for the header and footer.
-- Added a transparent-background full logo in the contact section.
-- Reduced logo scale dramatically so branding supports the page instead of dominating it.
-- Faith Sampson's supplied headshot remains in the About section.
+### Logo repair
+The previous `.webp` logo assets contained PNG image data but were served with a WebP MIME type, which caused the broken logo seen in the staging screenshot. v0.5 reuses the same transparent image data under the correct:
+- `assets/brand-crest.png`
+- `assets/brand-logo.png`
 
-### Content
+Header/footer use the smaller crest. Contact areas use the full transparent logo.
+
+### Client content retained
+- Faith Sampson headshot and biography
 - Phone: 705-881-3728
 - Email: saddle.and.stone.estate@gmail.com
 - Instagram: @saddle.and.stone.estate
 - Facebook link supplied by Faith
 - Service area: Uxbridge, Peterborough, Kawartha Lakes & surrounding areas
-- Get in Touch, social buttons, services and upcoming sale placeholders are included.
 
-### Important staging fix
-The previous live screenshots showed an HTML/CSS version mismatch caused by browser caching during rapid staging updates. v0.4 adds explicit cache-busting query strings and disables HTML/CSS/JS caching in Nginx while the site is under active review.
+## Planned feature phase
+
+After visual approval, add the owner-only publishing system.
+
+Planned owner workflow:
+1. Secure sign-in.
+2. Create/edit an estate sale.
+3. Set sale dates, time, location display rules and status.
+4. Upload sale photos.
+5. Add/edit/remove catalog items.
+6. Mark items available / sold / hidden.
+7. Choose which items are featured publicly.
+8. Publish/unpublish a sale.
+
+Public output:
+- Sales calendar
+- Upcoming sale cards
+- Sale detail pages
+- Photo galleries
+- Searchable/browsable item catalog
+- Item availability status
+
+The public `sales.html` page is already designed around this future data model so the feature build should not require a visual redesign.
 
 ## Deploy
 
@@ -45,5 +73,10 @@ docker compose up -d --build
 
 No DNS or Caddy changes are required.
 
-## Next
-Review v0.4 on mobile and desktop against the approved mock-up, then make targeted content/photo refinements instead of another visual reset.
+## Current project status
+
+- Brand/site design: ~80%
+- Responsive multipage shell: ~90%
+- Owner login/backend: 0% (next phase)
+- Dynamic sales calendar/catalog: 0% (next phase)
+- Overall website toward requested final scope: ~55%

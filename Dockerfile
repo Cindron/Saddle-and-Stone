@@ -1,7 +1,7 @@
 FROM nginx:1.27-alpine
 
 COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
-COPY index.html /usr/share/nginx/html/index.html
+COPY *.html /usr/share/nginx/html/
 COPY styles.css /usr/share/nginx/html/styles.css
 COPY script.js /usr/share/nginx/html/script.js
 COPY robots.txt /usr/share/nginx/html/robots.txt
