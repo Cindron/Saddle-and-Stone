@@ -306,3 +306,262 @@ em{font-weight:500}
   .contact-visual{padding:28px}
   .contact-visual img{max-width:230px}
 }
+
+/* v0.5.2 — vintage farmhouse refinement */
+:root{
+  --walnut:#5a3a28;
+  --walnut-dark:#352218;
+  --tobacco:#7c5136;
+  --linen:#efe2cf;
+  --parchment:#f3e7d5;
+}
+
+/* Gentle paper grain and age variation across light sections */
+body{
+  background:
+    linear-gradient(rgba(248,242,232,.965),rgba(248,242,232,.965)),
+    repeating-linear-gradient(0deg,rgba(91,61,40,.055) 0 1px,transparent 1px 5px),
+    repeating-linear-gradient(90deg,rgba(91,61,40,.025) 0 1px,transparent 1px 11px),
+    var(--paper);
+}
+body:before{
+  opacity:.11;
+  background:
+    radial-gradient(circle at 18% 22%,rgba(82,54,35,.22) 0 1px,transparent 1.2px),
+    radial-gradient(circle at 77% 68%,rgba(82,54,35,.12) 0 1px,transparent 1.2px),
+    linear-gradient(115deg,transparent 0 42%,rgba(117,83,55,.025) 43% 44%,transparent 45% 100%);
+  background-size:23px 23px,31px 31px,170px 170px;
+}
+.site-header{
+  background:
+    linear-gradient(rgba(250,246,238,.965),rgba(250,246,238,.965)),
+    repeating-linear-gradient(90deg,rgba(92,62,42,.035) 0 1px,transparent 1px 9px);
+}
+.home-hero-copy,
+.about-page,
+.services-page,
+.contact-page,
+.home-sales{
+  background:
+    linear-gradient(rgba(255,250,243,.96),rgba(255,250,243,.96)),
+    repeating-linear-gradient(0deg,rgba(88,59,40,.045) 0 1px,transparent 1px 6px),
+    radial-gradient(circle at 75% 20%,rgba(170,119,71,.09),transparent 24%),
+    var(--cream);
+}
+.home-services,
+.values-section,
+.faq-section,
+.catalog-section{
+  background:
+    linear-gradient(rgba(241,230,214,.93),rgba(248,242,232,.96)),
+    repeating-linear-gradient(90deg,rgba(91,61,40,.035) 0 1px,transparent 1px 8px),
+    var(--paper2);
+}
+.service-preview,
+.sale-preview-card>div,
+.social-btn,
+.contact-methods a,
+.values-grid article,
+.services-detail-grid article,
+.faq-grid article,
+.catalog-grid article,
+.calendar-card{
+  box-shadow:0 10px 28px rgba(74,48,31,.08);
+}
+
+/* Home intro: vintage still-life replaces duplicate portrait */
+.intro-still-life{
+  min-height:470px;
+  width:min(100%,430px);
+}
+.vintage-still{
+  position:absolute;
+  background-size:cover;
+  background-position:center;
+  box-shadow:var(--shadow);
+  border:10px solid #e9ddcc;
+}
+.vintage-still-main{
+  inset:18px 42px 42px 0;
+  background-image:
+    linear-gradient(rgba(59,39,27,.04),rgba(59,39,27,.08)),
+    url("https://images.pexels.com/photos/271816/pexels-photo-271816.jpeg?auto=compress&cs=tinysrgb&w=1000");
+  transform:rotate(-1.5deg);
+}
+.vintage-still-small{
+  width:46%;
+  height:42%;
+  right:0;
+  bottom:12px;
+  background-image:
+    linear-gradient(rgba(59,39,27,.06),rgba(59,39,27,.10)),
+    url("https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&w=700");
+  transform:rotate(2.5deg);
+  border-width:8px;
+}
+.intro-still-life .paper-note{
+  left:18px;
+  bottom:0;
+  z-index:3;
+  background:#ead7bd;
+  color:#633e2b;
+}
+
+/* Bring richer brown/leather tones into accents */
+.btn-outline{
+  border-color:#9a6a4a;
+  color:var(--walnut);
+  background:#fff9f0;
+}
+.story-copy{
+  background:
+    linear-gradient(rgba(53,34,24,.94),rgba(45,29,21,.96)),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.02) 0 1px,transparent 1px 11px);
+}
+.social-band{
+  background:
+    linear-gradient(rgba(239,228,211,.95),rgba(239,228,211,.95)),
+    repeating-linear-gradient(0deg,rgba(103,68,45,.04) 0 1px,transparent 1px 7px),
+    #efe4d3;
+}
+.site-footer{
+  background:
+    linear-gradient(rgba(32,23,17,.97),rgba(32,23,17,.97)),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 10px),
+    var(--walnut-dark);
+}
+
+/* Reliable large brand treatment: built from the known-good crest plus live type */
+.home-contact-brand{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at center,rgba(202,161,105,.11),transparent 52%),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.018) 0 1px,transparent 1px 12px);
+}
+.home-contact-brand:before,
+.home-contact-brand:after{
+  content:"";
+  position:absolute;
+  width:1px;
+  height:65%;
+  top:17.5%;
+  background:rgba(213,179,126,.18);
+}
+.home-contact-brand:before{left:16%}
+.home-contact-brand:after{right:16%}
+.heritage-mark{
+  width:min(320px,90%);
+  padding:26px 28px 24px;
+  text-align:center;
+  border:1px solid rgba(213,179,126,.42);
+  outline:1px solid rgba(213,179,126,.14);
+  outline-offset:6px;
+  background:rgba(40,47,34,.32);
+  box-shadow:0 18px 38px rgba(24,17,12,.15);
+}
+.heritage-mark img{
+  width:92px;
+  height:92px;
+  margin:0 auto 9px;
+  object-fit:contain;
+}
+.heritage-mark>span{
+  display:block;
+  font:600 30px/1 var(--serif);
+  letter-spacing:.055em;
+  color:#f4e7d2;
+}
+.heritage-mark>small{
+  display:block;
+  margin-top:7px;
+  color:var(--gold2);
+  font:700 8px var(--sans);
+  letter-spacing:.22em;
+}
+.heritage-mark>i{
+  display:block;
+  margin-top:18px;
+  color:#d8c5aa;
+  font:italic 17px var(--serif);
+}
+
+/* Contact page: replace empty green block with an editorial image + inset brand card */
+.contact-visual{
+  position:relative;
+  min-height:500px;
+  padding:0;
+  overflow:hidden;
+  background:var(--olive2);
+}
+.contact-visual-photo{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(180deg,rgba(36,29,21,.18),rgba(42,49,35,.66)),
+    url("https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=1200") center/cover;
+}
+.contact-visual-card{
+  position:absolute;
+  left:9%;
+  right:9%;
+  bottom:9%;
+  padding:24px 24px 21px;
+  text-align:center;
+  color:#fff6e7;
+  border:1px solid rgba(219,184,132,.56);
+  background:rgba(47,35,25,.84);
+  backdrop-filter:blur(5px);
+  box-shadow:0 16px 38px rgba(28,18,12,.30);
+}
+.contact-visual-card img{
+  width:72px;
+  height:72px;
+  object-fit:contain;
+  margin:-54px auto 8px;
+  filter:drop-shadow(0 5px 12px rgba(0,0,0,.25));
+}
+.contact-visual-card .eyebrow{margin-bottom:6px}
+.contact-visual-card h3{font-size:2rem}
+.contact-visual-card>span{
+  display:block;
+  width:54px;
+  height:1px;
+  margin:15px auto 12px;
+  background:var(--gold2);
+}
+.contact-visual-card>p:last-child{
+  margin:0 auto;
+  max-width:360px;
+  color:#e0d1bd;
+  font:15px/1.45 var(--serif);
+}
+
+/* Slightly warmer brown treatment for contact cards */
+.contact-methods a{
+  background:
+    linear-gradient(rgba(255,250,243,.95),rgba(255,250,243,.95)),
+    repeating-linear-gradient(0deg,rgba(95,62,42,.05) 0 1px,transparent 1px 7px);
+}
+.contact-methods>a>span{
+  border-color:#a66e46;
+  color:#7b4a2f;
+}
+
+@media(max-width:800px){
+  .intro-still-life{min-height:430px;width:min(82vw,400px)}
+  .contact-visual{min-height:410px;margin-top:35px}
+  .contact-visual-card{left:7%;right:7%;bottom:8%}
+  .home-contact-brand{min-height:330px}
+}
+@media(max-width:540px){
+  .intro-still-life{min-height:370px;width:min(88vw,340px)}
+  .vintage-still-main{inset:12px 34px 38px 0}
+  .vintage-still-small{width:48%;height:40%}
+  .heritage-mark{width:min(290px,88%);padding:23px 19px 21px}
+  .heritage-mark img{width:78px;height:78px}
+  .heritage-mark>span{font-size:25px}
+  .contact-visual{min-height:390px}
+  .contact-visual-card{left:6%;right:6%;padding:22px 18px 18px}
+  .contact-visual-card h3{font-size:1.72rem}
+}

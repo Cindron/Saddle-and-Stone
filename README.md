@@ -1,10 +1,10 @@
-# Saddle & Stone Estate Sales — v0.5
+# Saddle & Stone Estate Sales — v0.5.2
 
 Preview: https://saddleandstone.cindron.ca
 
 The staging site remains `noindex, nofollow`.
 
-## v0.5 — multipage cozy cottage / farmhouse design pass
+## v0.5.2 — vintage farmhouse refinement
 
 The site is now structured as a professional multipage website rather than one long homepage.
 
@@ -38,6 +38,15 @@ Header/footer use the smaller crest. Contact areas use the full transparent logo
 - Instagram: @saddle.and.stone.estate
 - Facebook link supplied by Faith
 - Service area: Uxbridge, Peterborough, Kawartha Lakes & surrounding areas
+
+## v0.5.2 refinement notes
+- Removed Faith's portrait from the homepage; her photo now appears only on the About page.
+- Replaced the homepage portrait area with a layered vintage farmhouse still-life.
+- Replaced the blank green contact panel with a photographed cottage/farmhouse panel and inset heritage card.
+- Replaced large full-logo image dependencies with a reliable composite mark built from the working crest plus live typography.
+- Added more brown/leather/walnut tones throughout the site.
+- Added subtle paper/fabric-like texture to light backgrounds and gentle wood-grain-style striping to dark areas.
+- Kept textures restrained so the site still feels premium rather than themed.
 
 ## Planned feature phase
 
