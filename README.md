@@ -1,10 +1,10 @@
-# Saddle & Stone Estate Sales — v0.6.0
+# Saddle & Stone Estate Sales — v0.6.1
 
 Preview: https://saddleandstone.cindron.ca
 
 The staging site remains `noindex, nofollow`.
 
-## v0.6.0 — logo pipeline reset
+## v0.6.1 — public design lock
 
 The site is now structured as a professional multipage website rather than one long homepage.
 
@@ -190,3 +190,26 @@ This build fixes the problem at the asset level:
 - No split crest/wordmark implementation remains in the rendered markup.
 
 Public design remains approximately 92%. Dynamic owner login/calendar/catalog remain the next phase after the client-facing design is locked.
+
+
+## v0.6.1 public design lock — 100%
+The client-facing design pass is now complete.
+
+Final polish:
+- Removed all internal build/next-phase language from public copy.
+- Rewrote the Sales page so it reads like a real public-facing site even before live sale dates are published.
+- Kept the verified transparent logo pipeline from v0.6.0 unchanged.
+- Added accessibility polish: skip link, visible keyboard focus and active-page semantics.
+- Improved mobile navigation behavior: Escape-to-close and outside-click close.
+- Added reduced-motion support.
+- Added lazy loading for below-the-fold content images.
+- Added a restrained copyright line to all public footers.
+- Updated the Sales page closing panel to a client-facing inquiry CTA.
+
+Status:
+- Public visual design: 100% — locked for client review.
+- Responsive multipage shell: 100%.
+- Public contact/social links: complete.
+- Owner login + dynamic sales/calendar/catalog: separate feature phase, not included in this visual-design percentage.
+
+Do not alter the v0.6.0 logo asset or its URL unless a new client-approved master is explicitly supplied.

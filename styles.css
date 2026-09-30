@@ -1235,3 +1235,61 @@ body:before{
   .heritage-mark-v10 .heritage-v10-logo{width:min(210px,90%) !important}
   .contact-brand-v10 .contact-v10-logo{width:min(200px,86%) !important}
 }
+
+
+/* v0.6.1 — final client-facing polish */
+.skip-link{
+  position:fixed;
+  left:16px;
+  top:12px;
+  z-index:9999;
+  padding:10px 14px;
+  background:var(--walnut,#3a2418);
+  color:#fff8ee;
+  border:1px solid rgba(255,255,255,.28);
+  transform:translateY(-160%);
+  transition:transform .18s ease;
+}
+.skip-link:focus{transform:translateY(0)}
+
+a:focus-visible,
+button:focus-visible{
+  outline:2px solid var(--rust,#b85d32);
+  outline-offset:4px;
+}
+
+.footer-legal{
+  grid-column:1/-1;
+  display:block;
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid rgba(237,220,194,.14);
+  color:rgba(244,231,211,.62);
+  font:500 10px/1.4 var(--sans);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.sales-note .btn{
+  display:inline-flex;
+  margin-top:18px;
+}
+
+@media(max-width:800px){
+  .footer-legal{
+    width:100%;
+    text-align:center;
+    margin-top:10px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,
+  *::before,
+  *::after{
+    scroll-behavior:auto !important;
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+  }
+}
