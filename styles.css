@@ -651,3 +651,129 @@ body:before{
   .heritage-mark .heritage-full-logo{width:min(220px,90%)}
   .contact-visual-card .contact-full-logo{width:min(170px,72%);margin-top:-54px}
 }
+
+
+/* v0.5.4 — official transparent master logo
+   This asset is derived directly from the client-supplied transparent source.
+   The artwork is unchanged; only web sizing/compression and clear padding were applied. */
+.brand-crest,
+.footer-crest{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+.brand-crest{
+  width:56px;
+  height:58px;
+  overflow:hidden;
+}
+.brand-crest img{
+  width:92px;
+  height:92px;
+  max-width:none;
+  left:50%;
+  top:-3px;
+  transform:translateX(-50%);
+  object-fit:contain;
+}
+
+.footer-crest{
+  width:45px;
+  height:47px;
+  overflow:hidden;
+}
+.footer-crest img{
+  width:74px;
+  height:74px;
+  max-width:none;
+  left:50%;
+  top:-2px;
+  transform:translateX(-50%);
+  object-fit:contain;
+}
+
+/* Give the transparent full mark a warm parchment field instead of a black box. */
+.heritage-mark{
+  width:min(340px,90%);
+  padding:24px 26px 23px;
+  background:
+    linear-gradient(rgba(247,237,222,.97),rgba(241,225,203,.97)),
+    repeating-linear-gradient(0deg,rgba(91,61,40,.04) 0 1px,transparent 1px 7px);
+  border:1px solid rgba(173,126,79,.56);
+  outline:1px solid rgba(213,179,126,.18);
+  color:var(--ink);
+}
+.heritage-mark .heritage-full-logo{
+  display:block;
+  width:min(265px,92%);
+  height:auto;
+  margin:0 auto 7px;
+  object-fit:contain;
+  filter:none;
+}
+.heritage-mark>i{
+  margin-top:8px;
+  color:#6c513e;
+  font-size:16px;
+}
+
+/* Contact feature: vintage photograph + parchment brand card. */
+.contact-visual-card{
+  left:8%;
+  right:8%;
+  bottom:7%;
+  padding:24px 24px 22px;
+  color:var(--ink);
+  border:1px solid rgba(173,126,79,.60);
+  background:
+    linear-gradient(rgba(248,239,225,.965),rgba(240,224,202,.965)),
+    repeating-linear-gradient(0deg,rgba(91,61,40,.045) 0 1px,transparent 1px 7px);
+  backdrop-filter:blur(5px);
+  box-shadow:0 18px 40px rgba(28,18,12,.28);
+}
+.contact-visual-card .contact-full-logo{
+  display:block;
+  width:min(205px,72%);
+  height:auto;
+  max-width:none;
+  margin:0 auto 6px;
+  object-fit:contain;
+  filter:none;
+}
+.contact-visual-card h3{
+  color:var(--walnut);
+  margin-top:2px;
+}
+.contact-visual-card>span{
+  background:#aa774c;
+}
+.contact-visual-card>p:last-child{
+  color:#6d5a4b;
+}
+
+/* Transparent artwork needs breathing room, especially on mobile. */
+.brand img,
+.footer-brand img,
+.heritage-mark img,
+.contact-visual-card img{
+  background:transparent !important;
+}
+.brand,
+.footer-brand{
+  align-items:center;
+}
+
+@media(max-width:800px){
+  .brand-crest{width:48px;height:50px}
+  .brand-crest img{width:80px;height:80px;top:-3px}
+  .footer-crest{width:43px;height:45px}
+  .footer-crest img{width:70px;height:70px}
+  .contact-visual-card{left:7%;right:7%;bottom:7%}
+}
+@media(max-width:540px){
+  .brand-crest{width:44px;height:46px}
+  .brand-crest img{width:73px;height:73px;top:-2px}
+  .heritage-mark .heritage-full-logo{width:min(240px,92%)}
+  .contact-visual-card .contact-full-logo{width:min(190px,76%);margin-top:0}
+}
