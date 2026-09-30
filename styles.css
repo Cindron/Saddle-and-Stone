@@ -876,3 +876,129 @@ body:before{
   .heritage-mark .heritage-full-logo{width:min(245px,92%) !important}
   .contact-visual-card .contact-full-logo{width:min(195px,78%) !important}
 }
+
+
+/* v0.5.6 — visible branding restore
+   Use only browser-proven transparent assets: the known-good crest plus an
+   exact transparent wordmark exported from the approved master logo. */
+.brand-restored{
+  min-width:0 !important;
+  height:64px;
+  display:flex !important;
+  align-items:center !important;
+  gap:9px;
+  overflow:visible !important;
+}
+.brand-restored-crest{
+  display:block !important;
+  width:48px !important;
+  height:48px !important;
+  object-fit:contain !important;
+  flex:0 0 auto;
+  background:transparent !important;
+}
+.brand-restored-wordmark{
+  display:block !important;
+  width:178px !important;
+  height:auto !important;
+  object-fit:contain !important;
+  background:transparent !important;
+}
+
+.footer-brand-restored{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start;
+  gap:8px;
+  min-width:0 !important;
+  height:auto !important;
+  overflow:visible !important;
+}
+.footer-restored-crest{
+  display:block !important;
+  width:40px !important;
+  height:40px !important;
+  object-fit:contain !important;
+  background:transparent !important;
+}
+.footer-restored-wordmark{
+  display:block !important;
+  width:145px !important;
+  height:auto !important;
+  object-fit:contain !important;
+  background:transparent !important;
+}
+
+.heritage-mark-restored{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.heritage-restored-crest{
+  display:block !important;
+  width:92px !important;
+  height:92px !important;
+  object-fit:contain !important;
+  margin:0 auto 4px !important;
+  background:transparent !important;
+}
+.heritage-restored-wordmark{
+  display:block !important;
+  width:min(250px,92%) !important;
+  height:auto !important;
+  object-fit:contain !important;
+  margin:0 auto 8px !important;
+  background:transparent !important;
+}
+
+.contact-brand-lockup{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 10px;
+}
+.contact-restored-crest{
+  display:block !important;
+  width:78px !important;
+  height:78px !important;
+  object-fit:contain !important;
+  margin:0 auto 3px !important;
+  background:transparent !important;
+}
+.contact-restored-wordmark{
+  display:block !important;
+  width:min(205px,78%) !important;
+  height:auto !important;
+  object-fit:contain !important;
+  margin:0 auto !important;
+  background:transparent !important;
+}
+
+/* Disable every failed logo path/crop from prior iterations. */
+.brand-official,
+.brand-wordmark-crop,
+.footer-brand-official,
+.footer-wordmark-crop,
+.heritage-full-logo,
+.contact-full-logo{
+  display:none !important;
+}
+
+@media(max-width:800px){
+  .brand-restored{height:54px;gap:7px}
+  .brand-restored-crest{width:42px !important;height:42px !important}
+  .brand-restored-wordmark{width:153px !important}
+  .footer-restored-crest{width:36px !important;height:36px !important}
+  .footer-restored-wordmark{width:132px !important}
+}
+@media(max-width:540px){
+  .brand-restored{height:50px;gap:6px}
+  .brand-restored-crest{width:38px !important;height:38px !important}
+  .brand-restored-wordmark{width:140px !important}
+  .heritage-restored-crest{width:82px !important;height:82px !important}
+  .heritage-restored-wordmark{width:min(220px,92%) !important}
+  .contact-restored-crest{width:68px !important;height:68px !important}
+  .contact-restored-wordmark{width:min(185px,80%) !important}
+}

@@ -1,10 +1,10 @@
-# Saddle & Stone Estate Sales — v0.5.5
+# Saddle & Stone Estate Sales — v0.5.6
 
 Preview: https://saddleandstone.cindron.ca
 
 The staging site remains `noindex, nofollow`.
 
-## v0.5.5 — transparent logo restoration
+## v0.5.6 — visible transparent branding restore
 
 The site is now structured as a professional multipage website rather than one long homepage.
 
@@ -135,3 +135,15 @@ The v0.5.4 optimized logo asset did not render after deployment. This build remo
 - Stylesheet cache key bumped to v5.5.0.
 
 Public design remains approximately 92%; this patch is intentionally focused on restoring branding without changing the rest of the approved visual direction.
+
+
+## v0.5.6 branding fix
+The v0.5.5 full-logo file was not rendering in the deployed browser, which removed both the logo and business name from the header and left the larger brand areas blank.
+
+This build removes that failed path from the rendered site and uses:
+- `assets/brand-crest-v2.png` — the transparent crest already proven to render on the live site.
+- `assets/saddle-stone-wordmark-live.webp` — a transparent wordmark exported directly from the approved client logo.
+
+The header, footer, homepage heritage panel and contact brand card now use those two transparent pieces as one lockup. No black logo background and no CSS crop of a large square image.
+
+This is a stability fix only; the approved cottage/farmhouse visual direction is unchanged.
