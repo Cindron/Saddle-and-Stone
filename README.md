@@ -1,10 +1,10 @@
-# Saddle & Stone Estate Sales — v0.5.9
+# Saddle & Stone Estate Sales — v0.6.0
 
 Preview: https://saddleandstone.cindron.ca
 
 The staging site remains `noindex, nofollow`.
 
-## v0.5.9 — single transparent logo asset
+## v0.6.0 — logo pipeline reset
 
 The site is now structured as a professional multipage website rather than one long homepage.
 
@@ -176,3 +176,17 @@ Used in:
 - Contact page brand card
 
 There are no separate wordmark requests and no CSS cropping. The logo is displayed as the full approved artwork with its transparent background.
+
+
+## v0.6.0 logo pipeline reset
+The prior logo files were present in the repository but were not valid browser-renderable image payloads, which is why the live site kept showing broken-image icons.
+
+This build fixes the problem at the asset level:
+- New verified transparent PNG: `assets/saddle-stone-logo-v10.png`
+- The PNG was validated before commit as a renderable 360 × 312 transparent logo.
+- All five pages use the exact same absolute asset URL with a cache-busting revision.
+- Header, footer, homepage brand panel and contact brand panel now use unique v0.6.0 classes so no legacy logo CSS can interfere.
+- Asset caching is disabled on the staging server until the visual build is locked.
+- No split crest/wordmark implementation remains in the rendered markup.
+
+Public design remains approximately 92%. Dynamic owner login/calendar/catalog remain the next phase after the client-facing design is locked.

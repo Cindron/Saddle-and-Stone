@@ -1154,3 +1154,84 @@ body:before{
   .heritage-mark-final .heritage-final-logo{width:min(220px,90%) !important}
   .contact-brand-final .contact-final-logo{width:min(195px,84%) !important}
 }
+
+
+/* v0.6.0 — clean logo reset
+   One verified PNG file, one URL, unique classes. No legacy crop/split logic. */
+.brand-v10{
+  display:flex !important;
+  align-items:center !important;
+  min-height:84px !important;
+  height:auto !important;
+  overflow:visible !important;
+}
+.brand-v10-logo{
+  display:block !important;
+  width:118px !important;
+  height:auto !important;
+  max-width:118px !important;
+  object-fit:contain !important;
+  background:transparent !important;
+}
+
+.footer-brand-v10{
+  display:flex !important;
+  align-items:center !important;
+  min-width:0 !important;
+  overflow:visible !important;
+}
+.footer-v10-logo{
+  display:block !important;
+  width:118px !important;
+  height:auto !important;
+  max-width:118px !important;
+  object-fit:contain !important;
+  background:transparent !important;
+}
+
+.heritage-mark-v10{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.heritage-mark-v10 .heritage-v10-logo{
+  display:block !important;
+  width:min(230px,88%) !important;
+  height:auto !important;
+  max-width:100% !important;
+  margin:0 auto 10px !important;
+  object-fit:contain !important;
+  background:transparent !important;
+  filter:none !important;
+}
+
+.contact-brand-v10{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin:0 auto 10px !important;
+}
+.contact-brand-v10 .contact-v10-logo{
+  display:block !important;
+  width:min(220px,84%) !important;
+  height:auto !important;
+  max-width:100% !important;
+  margin:0 auto !important;
+  object-fit:contain !important;
+  background:transparent !important;
+  filter:none !important;
+}
+
+@media(max-width:800px){
+  .brand-v10{min-height:78px !important}
+  .brand-v10-logo{width:108px !important;max-width:108px !important}
+  .footer-v10-logo{width:108px !important;max-width:108px !important}
+}
+@media(max-width:540px){
+  .brand-v10{min-height:74px !important}
+  .brand-v10-logo{width:102px !important;max-width:102px !important}
+  .footer-v10-logo{width:102px !important;max-width:102px !important}
+  .heritage-mark-v10 .heritage-v10-logo{width:min(210px,90%) !important}
+  .contact-brand-v10 .contact-v10-logo{width:min(200px,86%) !important}
+}
