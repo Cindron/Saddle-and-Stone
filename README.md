@@ -1,10 +1,10 @@
-# Saddle & Stone Estate Sales — v0.5.2
+# Saddle & Stone Estate Sales — v0.5.3
 
 Preview: https://saddleandstone.cindron.ca
 
 The staging site remains `noindex, nofollow`.
 
-## v0.5.2 — vintage farmhouse refinement
+## v0.5.3 — complete logo repair + vintage farmhouse refinement
 
 The site is now structured as a professional multipage website rather than one long homepage.
 
@@ -89,3 +89,16 @@ No DNS or Caddy changes are required.
 - Owner login/backend: 0% (next phase)
 - Dynamic sales calendar/catalog: 0% (next phase)
 - Overall website toward requested final scope: ~55%
+
+
+## v0.5.3 logo correction
+The visual issue reported in review was confirmed: the standalone optimized crest file had actually been cropped through the lower stone curve. This was not just a CSS sizing problem.
+
+Fix:
+- Stop using the cropped standalone crest as the displayed source.
+- Use the original complete `saddle-stone-logo.webp` artwork everywhere.
+- Header/footer compact marks now crop the emblem presentation from the complete source with CSS, preserving the whole lower curve.
+- Larger brand areas now display the complete logo, including the lower rule and `ESTATE SALES` wording.
+- Added extra overflow protection and a new stylesheet cache key.
+
+No backend/catalog work was started in this patch; design remains the priority until public visual approval.

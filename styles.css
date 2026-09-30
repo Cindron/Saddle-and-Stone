@@ -565,3 +565,89 @@ body:before{
   .contact-visual-card{left:6%;right:6%;padding:22px 18px 18px}
   .contact-visual-card h3{font-size:1.72rem}
 }
+
+
+/* v0.5.3 — complete logo repair
+   The previous standalone crest asset had been cropped through the lower stone curve.
+   Use the original complete full logo as the source everywhere and crop only the
+   emblem presentation with CSS where a compact mark is needed. */
+.brand-crest{
+  width:54px;
+  height:54px;
+  display:block;
+  position:relative;
+  overflow:hidden;
+  flex:0 0 auto;
+}
+.brand-crest img{
+  position:absolute;
+  width:81px;
+  height:81px;
+  max-width:none;
+  left:50%;
+  top:0;
+  transform:translateX(-50%);
+  object-fit:contain;
+}
+
+.footer-crest{
+  width:46px;
+  height:46px;
+  display:block;
+  position:relative;
+  overflow:hidden;
+  flex:0 0 auto;
+}
+.footer-crest img{
+  position:absolute;
+  width:69px;
+  height:69px;
+  max-width:none;
+  left:50%;
+  top:0;
+  transform:translateX(-50%);
+  object-fit:contain;
+}
+
+/* Full logo treatments retain the complete bottom rule and ESTATE SALES line. */
+.heritage-mark .heritage-full-logo{
+  width:min(235px,88%);
+  height:auto;
+  max-width:none;
+  margin:0 auto 12px;
+  object-fit:contain;
+}
+.heritage-mark>span,
+.heritage-mark>small{
+  display:none;
+}
+
+.contact-visual-card .contact-full-logo{
+  width:min(190px,72%);
+  height:auto;
+  max-width:none;
+  margin:-62px auto 10px;
+  object-fit:contain;
+  filter:drop-shadow(0 5px 12px rgba(0,0,0,.25));
+}
+
+/* Ensure no logo container can clip the complete mark vertically. */
+.brand,
+.footer-brand,
+.heritage-mark,
+.contact-visual-card{
+  overflow:visible;
+}
+
+@media(max-width:800px){
+  .brand-crest{width:47px;height:47px}
+  .brand-crest img{width:71px;height:71px}
+  .footer-crest{width:44px;height:44px}
+  .footer-crest img{width:66px;height:66px}
+}
+@media(max-width:540px){
+  .brand-crest{width:43px;height:43px}
+  .brand-crest img{width:65px;height:65px}
+  .heritage-mark .heritage-full-logo{width:min(220px,90%)}
+  .contact-visual-card .contact-full-logo{width:min(170px,72%);margin-top:-54px}
+}
