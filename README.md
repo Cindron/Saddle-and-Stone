@@ -1,4 +1,4 @@
-# Saddle & Stone Estate Sales — v0.6.1
+# Saddle & Stone Estate Sales — v0.7.0
 
 Preview: https://saddleandstone.cindron.ca
 
@@ -213,3 +213,26 @@ Status:
 - Owner login + dynamic sales/calendar/catalog: separate feature phase, not included in this visual-design percentage.
 
 Do not alter the v0.6.0 logo asset or its URL unless a new client-approved master is explicitly supplied.
+
+
+## v0.7.0 — rustic mockup restoration
+Client review confirmed that the original Saddle & Stone mockup is the visual target.
+
+This pass deliberately moves the live site back toward that design:
+- Homepage uses Faith's actual portrait again in the About preview, matching the original mockup structure.
+- Homepage service section now uses four editorial cards: Estate Sale Planning, Styling & Merchandising, Sale Day Support, Antique & Vintage Curation.
+- Every stock image used in the HTML and CSS has been shifted away from modern interiors toward cozy cottages, country kitchens, vintage rooms, rustic cabins and warm wood interiors.
+- Hero photography is now old-country / rustic rather than contemporary.
+- Light surfaces use warm parchment/ivory texture; dark surfaces use walnut, olive and antique-brass tones.
+- Cards, borders, typography, image treatment and section spacing have been pushed toward a heritage editorial look rather than a modern app/site aesthetic.
+- Interior page heroes now use country/rustic photography and framed text panels.
+- Existing multipage structure is retained.
+- The proven v0.6.0 transparent logo asset is untouched.
+
+Design rule now locked:
+**Country, cottage, farmhouse, rustic cabin, vintage and barn-inspired only. No modern interior stock photography.**
+
+Status:
+- Public structure/content: complete.
+- Rustic visual restoration: major pass complete; client visual review recommended.
+- Owner login/calendar/catalog: still separate functional phase after the visual direction is signed off.
