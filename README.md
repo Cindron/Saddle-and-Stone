@@ -1,4 +1,4 @@
-# Saddle & Stone Estate Sales — v0.7.0
+# Saddle & Stone Estate Sales — v0.7.1
 
 Preview: https://saddleandstone.cindron.ca
 
@@ -236,3 +236,13 @@ Status:
 - Public structure/content: complete.
 - Rustic visual restoration: major pass complete; client visual review recommended.
 - Owner login/calendar/catalog: still separate functional phase after the visual direction is signed off.
+
+
+## v0.7.1 — homepage portrait cleanup
+Client review requested that Faith's portrait not appear twice.
+
+- Removed Faith's portrait from the homepage.
+- Faith's portrait remains on the About page only.
+- Replaced the homepage portrait frame with a rustic cottage/vintage interior image so the original mockup-style composition is preserved.
+- Restored the handwritten-style homepage note to "Old things. New stories."
+- No other design, branding, navigation or logo changes were made.
