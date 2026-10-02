@@ -247,3 +247,25 @@ Workflow:
 Existing saved photos remain visible while editing and can still be removed individually.
 The API remains unchanged; the owner portal stages the photos until the item ID exists,
 then uploads them transparently as part of the same Save action.
+
+
+## Calendar & maintenance phase
+
+The backend now includes a client-maintainable sale calendar and handoff tools.
+
+Owner portal:
+- Monthly sale calendar with Draft / Published / Archived states.
+- Calendar entries open the existing sale editor.
+- Business name, tagline, phone, email, service area and social links are stored in the portable SQLite database.
+- System-health panel shows schema version, database size, uploaded-photo count and backup count.
+- One-click server backup creates a SQLite snapshot plus uploaded images under the persistent backup directory.
+- Portable JSON export remains available.
+- Administrator roles distinguish the client owner from future web administrators.
+
+Public review:
+- /calendar/ shows published sales only.
+- Calendar entries can open the catalog filtered to that sale.
+- The page remains noindex,nofollow until final launch.
+
+Additional administrator accounts use the same authenticated Owner Portal and do
+not require VPS access. The original client account remains the owner role.

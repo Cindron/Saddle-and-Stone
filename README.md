@@ -346,3 +346,21 @@ minutes on mobile browsers.
 Owner and catalog static review routes now send no-store/no-cache headers while
 development is active, and owner/catalog assets have new revision query strings.
 This does not change the approved public website.
+
+
+## v0.10.0 — calendar & handoff maintenance
+
+Added the next handoff-ready management layer without changing the approved
+static public pages.
+
+- Owner Portal calendar for estate sale dates and statuses.
+- Isolated public calendar review page at /calendar/.
+- Portable business/contact/social settings in SQLite.
+- Maintenance health panel.
+- One-click server backup of database and uploads.
+- Existing portable JSON export retained.
+- Multi-admin role foundation for future web administrators.
+- Existing Faith account remains the owner role.
+
+Home, About, Services, Sales and Contact remain untouched until the dynamic
+catalog/calendar review builds are approved for final navigation integration.
