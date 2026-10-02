@@ -107,3 +107,5 @@ button.danger:hover{background:#72291f;border-color:#72291f}
 @media(max-width:760px){
   .card-actions button{min-height:38px}
 }
+
+.field-help{display:block;margin-top:2px;color:var(--muted);font-size:11px;font-weight:500;line-height:1.35}

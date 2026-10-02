@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <title>Saddle & Stone Owner Portal</title>
-  <link rel="stylesheet" href="./admin.css?v=0.10.1">
+  <link rel="stylesheet" href="./admin.css?v=0.11.0">
 </head>
 <body>
   <main class="shell">
@@ -66,8 +66,9 @@
                 <option value="hidden">Hidden</option>
               </select>
             </label>
-            <label>Sale
-              <select id="itemSale"><option value="">No linked sale</option></select>
+            <label>Estate Sale (optional)
+              <select id="itemSale"><option value="">Standalone catalog item</option></select>
+              <small class="field-help">Leave this as Standalone if the item is not part of a scheduled estate sale.</small>
             </label>
             <label class="check"><input id="itemFeatured" type="checkbox"> Feature this item</label>
           </div>
@@ -118,8 +119,12 @@
                 <option value="archived">Archived</option>
               </select>
             </label>
-            <label>Start<input id="saleStart" type="datetime-local"></label>
-            <label>End<input id="saleEnd" type="datetime-local"></label>
+            <label>Starts<input id="saleStart" type="datetime-local" required>
+              <small class="field-help">The sale appears on the calendar starting here.</small>
+            </label>
+            <label>Ends (optional)<input id="saleEnd" type="datetime-local">
+              <small class="field-help">For a multi-day sale, the calendar shows it through this date. Leave blank for a one-day sale.</small>
+            </label>
             <label>City<input id="saleCity" maxlength="120"></label>
             <label>Region<input id="saleRegion" maxlength="120"></label>
           </div>
@@ -251,6 +256,6 @@
       <p id="portalMessage" class="toast hidden" aria-live="polite"></p>
     </section>
   </main>
-  <script src="./admin.js?v=0.10.1" defer></script>
+  <script src="./admin.js?v=0.11.0" defer></script>
 </body>
 </html>

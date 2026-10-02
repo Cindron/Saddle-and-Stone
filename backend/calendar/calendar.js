@@ -11,7 +11,15 @@ function render(){
   let html="";
   for(let i=0;i<42;i++){
     const day=new Date(start);day.setDate(start.getDate()+i);
-    const daySales=sales.filter(s=>s.start_at&&sameDay(new Date(s.start_at),day));
+    const daySales=sales.filter(s=>{
+      if(!s.start_at)return false;
+      const startDate=new Date(s.start_at);
+      const endDate=s.end_at?new Date(s.end_at):new Date(startDate);
+      if(Number.isNaN(startDate.getTime())||Number.isNaN(endDate.getTime()))return false;
+      const d=new Date(day);d.setHours(12,0,0,0);
+      startDate.setHours(0,0,0,0);endDate.setHours(23,59,59,999);
+      return d>=startDate&&d<=endDate;
+    });
     html+='<div class="day'+(day.getMonth()!==m?" outside":"")+(sameDay(day,today)?" today":"")+'"><span class="date">'+day.getDate()+'</span>'+daySales.map(s=>'<a class="sale-pill" href="/catalog/?sale='+encodeURIComponent(s.slug)+'">'+esc(s.title)+'</a>').join("")+'</div>';
   }
   $("calendarGrid").innerHTML=html;

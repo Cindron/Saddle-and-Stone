@@ -16,7 +16,7 @@ $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginEr
 $("logoutBtn").addEventListener("click",async()=>{try{await api("/api/auth/logout",{method:"POST"})}catch{}showLogin()});
 async function activateTab(name){const btn=document.querySelector('[data-tab="'+name+'"]');if(!btn)return;document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b===btn));document.querySelectorAll(".tab-panel").forEach(p=>p.classList.add("hidden"));$(name+"Tab").classList.remove("hidden");if(name==="inquiries")await loadInquiries();if(name==="preview")renderPreview();if(name==="calendar")renderCalendar();if(name==="maintenance")await loadMaintenance()}
 document.querySelectorAll("[data-tab]").forEach(btn=>btn.addEventListener("click",()=>activateTab(btn.dataset.tab)));
-function populateSaleSelect(){const sel=$("itemSale"),current=sel.value;sel.innerHTML='<option value="">No linked sale</option>'+state.sales.map(s=>'<option value="'+s.id+'">'+esc(s.title)+' ('+esc(s.status)+')</option>').join("");sel.value=current}
+function populateSaleSelect(){const sel=$("itemSale"),current=sel.value;sel.innerHTML='<option value="">Standalone catalog item</option>'+state.sales.map(s=>'<option value="'+s.id+'">'+esc(s.title)+' ('+esc(s.status)+')</option>').join("");sel.value=current}
 async function loadItems(){const data=await api("/api/admin/items");state.items=data.items||[];renderItems();renderPreview();loadSummary()}
 function renderItems(){
   $("itemsEmpty").classList.toggle("hidden",state.items.length>0);
@@ -98,7 +98,17 @@ function renderCalendar(){
   for(let i=0;i<42;i++){
     const day=new Date(start);day.setDate(start.getDate()+i);
     const outside=day.getMonth()!==month;
-    const events=state.sales.filter(s=>{if(!s.start_at)return false;const d=new Date(s.start_at);return !Number.isNaN(d.getTime())&&sameDay(d,day)});
+    const events=state.sales.filter(s=>{
+      if(!s.start_at)return false;
+      const startDate=new Date(s.start_at);
+      if(Number.isNaN(startDate.getTime()))return false;
+      const endDate=s.end_at?new Date(s.end_at):new Date(startDate);
+      if(Number.isNaN(endDate.getTime()))return false;
+      const d=new Date(day);d.setHours(12,0,0,0);
+      const a=new Date(startDate);a.setHours(0,0,0,0);
+      const b=new Date(endDate);b.setHours(23,59,59,999);
+      return d>=a&&d<=b;
+    });
     out+='<div class="calendar-day'+(outside?" outside":"")+(sameDay(day,today)?" today":"")+'"><span class="calendar-date">'+day.getDate()+'</span>'+events.map(s=>'<button type="button" class="calendar-event '+esc(s.status)+'" data-calendar-sale="'+s.id+'">'+esc(s.title)+'</button>').join("")+'</div>';
   }
   grid.innerHTML=out;
@@ -112,7 +122,7 @@ function renderSales(){$("salesEmpty").classList.toggle("hidden",state.sales.len
 $("newSaleBtn").addEventListener("click",()=>openSale());$("cancelSaleBtn").addEventListener("click",()=>$("saleForm").classList.add("hidden"));
 function localDateValue(v){return v?String(v).slice(0,16):""}
 function openSale(id=null){const s=id?state.sales.find(x=>x.id===id):null;$("saleId").value=s?.id||"";$("saleFormTitle").textContent=s?"Edit Sale":"Add Sale";$("saleTitle").value=s?.title||"";$("saleStatus").value=s?.status||"draft";$("saleStart").value=localDateValue(s?.start_at);$("saleEnd").value=localDateValue(s?.end_at);$("saleCity").value=s?.city||"";$("saleRegion").value=s?.region||"";$("saleAddress").value=s?.address_public||"";$("saleSummary").value=s?.summary||"";$("saleForm").classList.remove("hidden");$("saleForm").scrollIntoView({behavior:"smooth",block:"start"})}
-$("saleForm").addEventListener("submit",async e=>{e.preventDefault();const id=$("saleId").value,body={title:$("saleTitle").value,status:$("saleStatus").value,start_at:$("saleStart").value||null,end_at:$("saleEnd").value||null,city:$("saleCity").value,region:$("saleRegion").value,address_public:$("saleAddress").value,summary:$("saleSummary").value};try{await api(id?"/api/admin/sales/"+id:"/api/admin/sales",{method:id?"PUT":"POST",body:JSON.stringify(body)});$("saleForm").classList.add("hidden");await loadSales();flash("Sale saved.")}catch(err){flash(err.message)}});
+$("saleForm").addEventListener("submit",async e=>{e.preventDefault();const id=$("saleId").value,body={title:$("saleTitle").value,status:$("saleStatus").value,start_at:$("saleStart").value||null,end_at:$("saleEnd").value||null,city:$("saleCity").value,region:$("saleRegion").value,address_public:$("saleAddress").value,summary:$("saleSummary").value};if(body.start_at&&body.end_at&&new Date(body.end_at)<new Date(body.start_at)){flash("Sale end must be after the start.");return}try{await api(id?"/api/admin/sales/"+id:"/api/admin/sales",{method:id?"PUT":"POST",body:JSON.stringify(body)});$("saleForm").classList.add("hidden");await loadSales();flash("Sale saved.")}catch(err){flash(err.message)}});
 async function loadMaintenance(){
   try{
     const [settingsData,systemData,backupData]=await Promise.all([api("/api/admin/site-settings"),api("/api/admin/system"),api("/api/admin/backups")]);

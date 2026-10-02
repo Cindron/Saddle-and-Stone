@@ -73,12 +73,27 @@ export function itemPayload(body, db, existingId = null) {
 export function salePayload(body, db, existingId = null) {
   const title = text(body.title, 160);
   if (!title) throw new Error("Title is required.");
+
+  const startAt = text(body.start_at ?? body.startAt, 40) || null;
+  const endAt = text(body.end_at ?? body.endAt, 40) || null;
+
+  if (!startAt) throw new Error("Sale start date and time are required.");
+
+  const startDate = new Date(startAt);
+  if (Number.isNaN(startDate.getTime())) throw new Error("Invalid sale start date.");
+
+  if (endAt) {
+    const endDate = new Date(endAt);
+    if (Number.isNaN(endDate.getTime())) throw new Error("Invalid sale end date.");
+    if (endDate < startDate) throw new Error("Sale end must be after the start.");
+  }
+
   return {
     title,
     slug: uniqueSlug(db, "sales", body.slug || title, existingId),
     summary: text(body.summary, 6000),
-    startAt: text(body.start_at ?? body.startAt, 40) || null,
-    endAt: text(body.end_at ?? body.endAt, 40) || null,
+    startAt,
+    endAt,
     city: text(body.city, 120),
     region: text(body.region, 120),
     addressPublic: text(body.address_public ?? body.addressPublic, 300),
