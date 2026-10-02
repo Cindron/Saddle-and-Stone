@@ -320,3 +320,10 @@ Catalog review features:
 
 The Caddy example now includes an isolated `/catalog/*` route. Do not add the
 Catalog link to the public navigation until the client approves this review build.
+
+
+## v0.9.1 — catalog self-test correction
+Corrected the automated catalog shell assertion. The v0.9.0 catalog page was
+being served, but the test looked for title-cased text while the actual approved
+eyebrow is uppercase. The test now verifies the page title and catalog grid
+element instead of depending on display-text capitalization.

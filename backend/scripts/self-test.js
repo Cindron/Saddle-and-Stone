@@ -105,7 +105,11 @@ try {
 
   const catalogPage = await fetch(`http://127.0.0.1:${port}/catalog/`);
   const catalogHtml = await catalogPage.text();
-  if (!catalogPage.ok || !catalogHtml.includes("Browse the Collection")) {
+  if (
+    !catalogPage.ok ||
+    !catalogHtml.includes("<title>Catalog | Saddle & Stone Estate Sales</title>") ||
+    !catalogHtml.includes('id="catalogGrid"')
+  ) {
     throw new Error("Customer catalog shell failed.");
   }
 
