@@ -385,3 +385,28 @@ Public site presentation is unchanged.
 Estate sales can now be permanently removed from the Owner Portal. Items linked
 to a deleted sale are preserved automatically and become standalone catalog
 items rather than being deleted.
+
+
+## v0.11.2 — live sales/catalog cleanup
+
+Removed all fictional upcoming-sale cards and sample catalog-preview items from
+the approved public pages.
+
+Public navigation now exposes:
+- Catalog -> /catalog/
+- Sales Calendar -> /calendar/
+
+The legacy Sales page remains as a clean gateway to the live calendar and live
+catalog, with no fake inventory or fake sale dates.
+
+Owner workflow:
+- Estate sales require a start date/time.
+- Optional end date/time creates a multi-day sale shown on every calendar day
+  from start through end.
+- End date cannot precede start date.
+- Catalog items can be left as **Standalone catalog item** with no sale linkage.
+- Deleting a sale preserves linked catalog items and converts them to standalone.
+- Estate sales now have a permanent Delete action for cleanup.
+
+The first account created in a fresh installation is explicitly assigned the
+owner role, preserving portability during future client-owned deployment.
