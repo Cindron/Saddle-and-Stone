@@ -129,6 +129,52 @@ try {
     throw new Error("Admin summary failed.");
   }
 
+  const settings = await request("/api/admin/site-settings", {}, cookie);
+  if (!settings.res.ok || !settings.data.settings?.business_name) {
+    throw new Error("Site settings read failed.");
+  }
+
+  const system = await request("/api/admin/system", {}, cookie);
+  if (!system.res.ok || system.data.schema_version !== "3") {
+    throw new Error("Maintenance system check failed.");
+  }
+
+  const sale = await request("/api/admin/sales", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrf
+    },
+    body: JSON.stringify({
+      title: "Self Test Estate Sale",
+      status: "published",
+      start_at: "2026-10-15T09:00",
+      end_at: "2026-10-15T15:00",
+      city: "Peterborough",
+      region: "Ontario"
+    })
+  }, cookie);
+  if (sale.res.status !== 201) throw new Error("Sale creation failed.");
+
+  const publicSales = await request("/api/sales");
+  if (!publicSales.res.ok || publicSales.data.sales?.length !== 1) {
+    throw new Error("Public sales feed failed.");
+  }
+
+  const calendarPage = await fetch(`http://127.0.0.1:${port}/calendar/`);
+  const calendarHtml = await calendarPage.text();
+  if (!calendarPage.ok || !calendarHtml.includes('id="calendarGrid"')) {
+    throw new Error("Calendar shell failed.");
+  }
+
+  const backup = await request("/api/admin/backups", {
+    method: "POST",
+    headers: { "X-CSRF-Token": csrf }
+  }, cookie);
+  if (backup.res.status !== 201 || !backup.data.backup?.name) {
+    throw new Error("Portal backup failed.");
+  }
+
   const exportCheck = await request("/api/admin/export.json", {}, cookie);
   if (!exportCheck.res.ok || exportCheck.data.items?.length !== 1) {
     throw new Error("Portable export failed.");
