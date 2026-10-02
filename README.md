@@ -302,3 +302,21 @@ current Caddy container can later expose only `/owner`, `/api/*` and
 
 The approved public website remains the default route and its container,
 Dockerfile, HTML, CSS and JavaScript are unchanged.
+
+
+## v0.9.0 — customer catalog review build
+A customer-facing catalog has been built inside the backend at `/catalog/`
+for isolated review. The approved public Home/About/Services/Sales/Contact files
+and navigation remain untouched.
+
+Catalog review features:
+- rustic Saddle & Stone styling
+- search/filtering
+- item status and optional pricing
+- item detail/gallery
+- estate-sale association
+- item-specific inquiry form
+- responsive mobile layout
+
+The Caddy example now includes an isolated `/catalog/*` route. Do not add the
+Catalog link to the public navigation until the client approves this review build.

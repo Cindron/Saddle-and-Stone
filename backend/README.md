@@ -205,3 +205,29 @@ All other paths continue to route to `saddle-stone-web:80`, so enabling the
 private owner portal does not replace or rebuild the approved public front end.
 
 See `deploy/Caddyfile.backend.example` for the exact path-routing pattern.
+
+
+## Customer catalog review shell
+
+A complete customer-facing catalog shell is now included at:
+
+```text
+/catalog/
+```
+
+It is intentionally **not linked from the approved main navigation yet**.
+
+Features:
+- Rustic/country visual language matching the approved Saddle & Stone site.
+- Catalog cards with photos, item references, categories, price and status.
+- Search plus Status / Category / Estate Sale filters.
+- Item detail view with multi-photo gallery.
+- Available / Pending / Sold treatment.
+- Linked estate-sale collection label.
+- "Ask About This Item" inquiry form tied directly to the item record.
+- Sold items disable the inquiry CTA.
+- Mobile responsive layout.
+- Noindex/nofollow while under review.
+
+The customer catalog is served by the backend so it can be reviewed independently
+before any main-site HTML/navigation is changed.

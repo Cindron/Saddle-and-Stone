@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#3b4635">
+  <title>Catalog | Saddle & Stone Estate Sales</title>
+  <meta name="description" content="Browse available vintage, antique and estate-sale finds from Saddle & Stone Estate Sales.">
+  <link rel="stylesheet" href="./catalog.css?v=1.0.0">
+</head>
+<body>
+  <a class="skip-link" href="#catalogMain">Skip to catalog</a>
+
+  <header class="catalog-header">
+    <a class="brand" href="/" aria-label="Saddle & Stone Estate Sales home">
+      <img src="/assets/saddle-stone-logo-v10.png?rev=20260930a" alt="Saddle & Stone Estate Sales">
+    </a>
+    <nav aria-label="Catalog navigation">
+      <a href="/">Home</a>
+      <a href="/sales.html">Upcoming Sales</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main id="catalogMain">
+    <section class="catalog-hero">
+      <div class="hero-copy">
+        <p class="eyebrow">SADDLE &amp; STONE COLLECTION</p>
+        <h1>Old things.<br>New stories.</h1>
+        <p>Browse a changing collection of estate-sale finds, vintage pieces and well-loved treasures looking for their next home.</p>
+      </div>
+      <div class="hero-detail" aria-hidden="true">
+        <span>EST. 2026</span>
+        <strong>Country finds, thoughtfully presented.</strong>
+      </div>
+    </section>
+
+    <section id="browseView" class="browse-shell">
+      <div class="browse-head">
+        <div>
+          <p class="eyebrow">BROWSE THE COLLECTION</p>
+          <h2>Available Finds</h2>
+        </div>
+        <p id="catalogCount" class="count" aria-live="polite"></p>
+      </div>
+
+      <div class="filters" aria-label="Catalog filters">
+        <label class="search-field">
+          <span>Search</span>
+          <input id="searchInput" type="search" placeholder="Search furniture, decor, item number…" autocomplete="off">
+        </label>
+        <label>
+          <span>Status</span>
+          <select id="statusFilter">
+            <option value="">All visible items</option>
+            <option value="available">Available</option>
+            <option value="pending">Pending</option>
+            <option value="sold">Sold</option>
+          </select>
+        </label>
+        <label>
+          <span>Category</span>
+          <select id="categoryFilter"><option value="">All categories</option></select>
+        </label>
+        <label>
+          <span>Estate Sale</span>
+          <select id="saleFilter"><option value="">All collections</option></select>
+        </label>
+      </div>
+
+      <div id="catalogNotice" class="notice hidden" role="status"></div>
+      <div id="catalogGrid" class="catalog-grid"></div>
+      <div id="catalogEmpty" class="empty hidden">
+        <span>✦</span>
+        <h3>No pieces match those filters.</h3>
+        <p>Try another search or check back as new finds are added.</p>
+      </div>
+    </section>
+
+    <section id="itemView" class="item-view hidden" aria-live="polite">
+      <button id="backToCatalog" class="back-link" type="button">← Back to catalog</button>
+      <div id="itemDetail"></div>
+    </section>
+
+    <section class="catalog-note">
+      <div>
+        <p class="eyebrow light">A NOTE FROM SADDLE &amp; STONE</p>
+        <h2>See something you love?</h2>
+        <p>Use the “Ask About This Item” button and include any questions you have. Availability can change quickly, especially around estate-sale dates.</p>
+      </div>
+      <a class="outline-button" href="/contact.html">General Contact →</a>
+    </section>
+  </main>
+
+  <footer class="catalog-footer">
+    <div class="footer-brand">
+      <img src="/assets/saddle-stone-logo-v10.png?rev=20260930a" alt="Saddle & Stone Estate Sales">
+      <p>Old things. New stories.</p>
+    </div>
+    <div>
+      <strong>Uxbridge · Peterborough · Kawartha Lakes</strong>
+      <a href="mailto:saddle.and.stone.estate@gmail.com">saddle.and.stone.estate@gmail.com</a>
+      <a href="tel:+17058813728">705-881-3728</a>
+    </div>
+  </footer>
+
+  <dialog id="inquiryDialog" class="inquiry-dialog">
+    <form id="inquiryForm" method="dialog">
+      <button id="closeInquiry" class="dialog-close" type="button" aria-label="Close inquiry form">×</button>
+      <p class="eyebrow">ASK ABOUT THIS ITEM</p>
+      <h2 id="inquiryItemTitle">Item inquiry</h2>
+      <p id="inquiryRef" class="muted"></p>
+
+      <label>Name<input id="inquiryName" required maxlength="120" autocomplete="name"></label>
+      <div class="two-fields">
+        <label>Email<input id="inquiryEmail" type="email" maxlength="200" autocomplete="email"></label>
+        <label>Phone<input id="inquiryPhone" type="tel" maxlength="80" autocomplete="tel"></label>
+      </div>
+      <label>Message<textarea id="inquiryMessage" rows="5" maxlength="3000" placeholder="I’m interested in this piece and would like to know…"></textarea></label>
+      <label class="trap" aria-hidden="true">Website<input id="inquiryWebsite" tabindex="-1" autocomplete="off"></label>
+      <p class="form-help">Please include either an email address or phone number so Faith can reply.</p>
+      <p id="inquiryError" class="form-error" aria-live="polite"></p>
+      <button id="sendInquiry" class="primary-button" type="submit">Send Inquiry</button>
+    </form>
+  </dialog>
+
+  <script src="./catalog.js?v=1.0.0" defer></script>
+</body>
+</html>

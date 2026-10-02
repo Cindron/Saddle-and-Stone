@@ -103,6 +103,12 @@ try {
     throw new Error("Public catalog read failed.");
   }
 
+  const catalogPage = await fetch(`http://127.0.0.1:${port}/catalog/`);
+  const catalogHtml = await catalogPage.text();
+  if (!catalogPage.ok || !catalogHtml.includes("Browse the Collection")) {
+    throw new Error("Customer catalog shell failed.");
+  }
+
   const inquiry = await request(`/api/catalog/${item.data.item.slug}/inquiries`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

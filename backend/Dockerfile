@@ -8,6 +8,7 @@ RUN npm install --omit=dev
 COPY src ./src
 COPY scripts ./scripts
 COPY admin ./admin
+COPY catalog ./catalog
 
 RUN mkdir -p /data/uploads /data/backups && chown -R node:node /app /data
 

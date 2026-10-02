@@ -155,6 +155,16 @@ app.use("/owner", express.static(path.join(process.cwd(), "admin"), {
   dotfiles: "deny"
 }));
 
+// Customer catalog shell. It is intentionally not linked from the approved
+// public website yet; Caddy can expose /catalog separately for review.
+app.use("/catalog", express.static(path.join(process.cwd(), "catalog"), {
+  index: "index.html",
+  fallthrough: true,
+  etag: true,
+  maxAge: "5m",
+  dotfiles: "deny"
+}));
+
 // Uploaded catalog photos are public only when the backend is eventually
 // reverse-proxied. Current compose binds the service to 127.0.0.1 only.
 app.use("/uploads", express.static(config.uploadDir, {
