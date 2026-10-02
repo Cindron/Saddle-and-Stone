@@ -841,6 +841,32 @@ app.put("/api/admin/sales/:id", csrfRequired, (req, res) => {
   }
 });
 
+app.delete("/api/admin/sales/:id", csrfRequired, (req, res) => {
+  try {
+    const id = requirePositiveId(req.params.id);
+    const sale = db.prepare("SELECT id, title FROM sales WHERE id = ?").get(id);
+    if (!sale) return res.status(404).json({ error: "Sale not found." });
+
+    const linkedItems = Number(db.prepare(
+      "SELECT COUNT(*) AS count FROM items WHERE sale_id = ?"
+    ).get(id).count);
+
+    // FK rule is ON DELETE SET NULL, so catalog items are preserved as standalone.
+    db.prepare("DELETE FROM sales WHERE id = ?").run(id);
+
+    res.json({
+      ok: true,
+      deleted: {
+        id: sale.id,
+        title: sale.title,
+        items_made_standalone: linkedItems
+      }
+    });
+  } catch (error) {
+    res.status(error.status || 400).json({ error: error.message });
+  }
+});
+
 app.get("/api/admin/inquiries", (_req, res) => {
   const inquiries = db.prepare(`
     SELECT q.*, i.item_code, i.title AS item_title, i.slug AS item_slug

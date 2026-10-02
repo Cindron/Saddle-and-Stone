@@ -378,3 +378,10 @@ deletion.
 - Dashboard summary includes a Hidden count.
 
 Public site presentation is unchanged.
+
+
+## v0.11.1 — sale cleanup behavior
+
+Estate sales can now be permanently removed from the Owner Portal. Items linked
+to a deleted sale are preserved automatically and become standalone catalog
+items rather than being deleted.

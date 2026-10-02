@@ -283,3 +283,11 @@ The Owner Portal now distinguishes two separate actions:
 
 The dashboard also shows the number of hidden items so unpublished inventory is
 not forgotten.
+
+
+## Sale deletion behavior
+
+Estate sales now have a permanent Delete action in the Owner Portal. Deleting a
+sale never deletes its catalog inventory. Any items linked to that sale are
+automatically preserved as **Standalone catalog items** through the database
+foreign-key rule.

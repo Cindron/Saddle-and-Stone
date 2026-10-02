@@ -118,7 +118,26 @@ $("calendarPrev").addEventListener("click",()=>{calendarCursor.setMonth(calendar
 $("calendarNext").addEventListener("click",()=>{calendarCursor.setMonth(calendarCursor.getMonth()+1);renderCalendar()});
 $("calendarToday").addEventListener("click",()=>{calendarCursor=new Date();calendarCursor.setDate(1);renderCalendar()});
 
-function renderSales(){$("salesEmpty").classList.toggle("hidden",state.sales.length>0);$("salesList").innerHTML=state.sales.map(s=>'<article class="card"><div class="card-image card-placeholder">Estate<br>Sale</div><div><h3>'+esc(s.title)+'</h3><div class="meta"><span class="badge">'+esc(s.status)+'</span><span class="badge">'+(s.item_count||0)+' items</span></div><div class="muted">'+esc(s.city||"")+(s.region?", "+esc(s.region):"")+'</div><div class="card-actions"><button type="button" data-edit-sale="'+s.id+'">Edit</button></div></div></article>').join("");document.querySelectorAll("[data-edit-sale]").forEach(b=>b.addEventListener("click",()=>openSale(Number(b.dataset.editSale))))}
+function renderSales(){
+  $("salesEmpty").classList.toggle("hidden",state.sales.length>0);
+  $("salesList").innerHTML=state.sales.map(s=>'<article class="card"><div class="card-image card-placeholder">Estate<br>Sale</div><div><h3>'+esc(s.title)+'</h3><div class="meta"><span class="badge">'+esc(s.status)+'</span><span class="badge">'+(s.item_count||0)+' items</span></div><div class="muted">'+esc(s.city||"")+(s.region?", "+esc(s.region):"")+'</div><div class="card-actions"><button type="button" data-edit-sale="'+s.id+'">Edit</button><button type="button" class="danger" data-delete-sale="'+s.id+'">Delete</button></div></div></article>').join("");
+  document.querySelectorAll("[data-edit-sale]").forEach(b=>b.addEventListener("click",()=>openSale(Number(b.dataset.editSale))));
+  document.querySelectorAll("[data-delete-sale]").forEach(b=>b.addEventListener("click",()=>deleteSale(Number(b.dataset.deleteSale))));
+}
+async function deleteSale(id){
+  const sale=state.sales.find(x=>x.id===id);if(!sale)return;
+  const linked=Number(sale.item_count||0);
+  const note=linked
+    ?"\n\n"+linked+" linked catalog item"+(linked===1?" will":"s will")+" be kept and changed to Standalone."
+    :"";
+  if(!confirm('Permanently delete "'+sale.title+'"?'+note))return;
+  try{
+    const data=await api("/api/admin/sales/"+id,{method:"DELETE"});
+    if(String($("saleId").value)===String(id))$("saleForm").classList.add("hidden");
+    await Promise.all([loadSales(),loadItems()]);
+    flash("Sale deleted. "+(data.deleted?.items_made_standalone||0)+" linked item(s) kept as standalone.");
+  }catch(err){flash(err.message)}
+}
 $("newSaleBtn").addEventListener("click",()=>openSale());$("cancelSaleBtn").addEventListener("click",()=>$("saleForm").classList.add("hidden"));
 function localDateValue(v){return v?String(v).slice(0,16):""}
 function openSale(id=null){const s=id?state.sales.find(x=>x.id===id):null;$("saleId").value=s?.id||"";$("saleFormTitle").textContent=s?"Edit Sale":"Add Sale";$("saleTitle").value=s?.title||"";$("saleStatus").value=s?.status||"draft";$("saleStart").value=localDateValue(s?.start_at);$("saleEnd").value=localDateValue(s?.end_at);$("saleCity").value=s?.city||"";$("saleRegion").value=s?.region||"";$("saleAddress").value=s?.address_public||"";$("saleSummary").value=s?.summary||"";$("saleForm").classList.remove("hidden");$("saleForm").scrollIntoView({behavior:"smooth",block:"start"})}
