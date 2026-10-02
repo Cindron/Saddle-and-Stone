@@ -1,6 +1,7 @@
-# Isolated backend test stack.
-# This file is deliberately separate from docker-compose.yml so the approved
-# public website is unaffected by backend development/testing.
+# Isolated/backend service for Saddle & Stone.
+# The localhost port remains available for private health checks.
+# The external saddle-stone-net attachment allows the existing Caddy container
+# to proxy ONLY /owner, /api and /uploads when we deliberately enable those routes.
 services:
   backend:
     build:
@@ -14,3 +15,10 @@ services:
       - ./backend-data:/data
     ports:
       - "127.0.0.1:8787:8787"
+    networks:
+      - saddle-stone-net
+
+networks:
+  saddle-stone-net:
+    external: true
+    name: saddle-stone-net

@@ -293,3 +293,12 @@ portable JSON export, owner password rotation, optional generic SMTP inquiry
 notifications, database readiness check and an automated backend self-test.
 
 The root public Dockerfile, compose file, HTML, CSS and JS remain unchanged.
+
+
+## v0.8.2 — safe owner-route preparation
+Backend compose now joins the existing `saddle-stone-net` network so the
+current Caddy container can later expose only `/owner`, `/api/*` and
+`/uploads/*`. The localhost health port remains in place.
+
+The approved public website remains the default route and its container,
+Dockerfile, HTML, CSS and JavaScript are unchanged.

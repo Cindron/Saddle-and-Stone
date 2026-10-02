@@ -186,3 +186,22 @@ The isolated owner portal now includes:
 - A visible ownership reminder explaining that data and uploads can move to a client-owned server.
 
 These remain inside the localhost-only backend until the isolated stack is tested.
+
+
+## Safe same-domain exposure
+
+The backend compose now joins the existing external Docker network
+`saddle-stone-net` while retaining the localhost-only port mapping for health
+checks.
+
+This allows the existing Caddy container to route only:
+- `/owner`
+- `/api/*`
+- `/uploads/*`
+
+to the backend.
+
+All other paths continue to route to `saddle-stone-web:80`, so enabling the
+private owner portal does not replace or rebuild the approved public front end.
+
+See `deploy/Caddyfile.backend.example` for the exact path-routing pattern.
