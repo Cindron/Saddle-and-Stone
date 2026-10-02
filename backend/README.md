@@ -269,3 +269,17 @@ Public review:
 
 Additional administrator accounts use the same authenticated Owner Portal and do
 not require VPS access. The original client account remains the owner role.
+
+
+## Item visibility and deletion
+
+The Owner Portal now distinguishes two separate actions:
+
+- **Hide** — removes an item from the public catalog but keeps the record, photos
+  and inquiries in the Owner Portal. Hidden cards are strongly marked
+  "HIDDEN — NOT PUBLIC" and can be restored with **Make Available**.
+- **Delete** — permanently removes the item record, its image records/files and
+  associated inquiries after a two-step confirmation.
+
+The dashboard also shows the number of hidden items so unpublished inventory is
+not forgotten.

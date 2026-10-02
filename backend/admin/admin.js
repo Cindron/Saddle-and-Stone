@@ -9,7 +9,7 @@ function flash(t){message.textContent=t;message.classList.remove("hidden");clear
 async function api(url,options={}){const init={credentials:"same-origin",...options,headers:{...(options.headers||{})}};if(options.body&&!(options.body instanceof FormData)&&!init.headers["Content-Type"])init.headers["Content-Type"]="application/json";if(state.csrf&&!["GET","HEAD"].includes((init.method||"GET").toUpperCase()))init.headers["X-CSRF-Token"]=state.csrf;const res=await fetch(url,init);const data=await res.json().catch(()=>({}));if(res.status===401){showLogin();throw new Error("Please sign in again.")}if(!res.ok)throw new Error(data.error||"Request failed.");return data}
 function showLogin(){state.csrf="";state.admin=null;portalView.classList.add("hidden");loginView.classList.remove("hidden")}
 function showPortal(){loginView.classList.add("hidden");portalView.classList.remove("hidden");$("signedInAs").textContent=(state.admin?.display_name?state.admin.display_name+" · ":"")+(state.admin?.email||"")}
-async function loadSummary(){try{const data=await api("/api/admin/summary");const s=data.stats||{};$("summaryStrip").innerHTML=[["Available",s.available_items||0],["Pending",s.pending_items||0],["Sold",s.sold_items||0],["Published Sales",s.published_sales||0],["New Inquiries",s.new_inquiries||0]].map(([label,value])=>'<div class="summary-box"><strong>'+value+'</strong><span>'+esc(label)+'</span></div>').join("")}catch{}}
+async function loadSummary(){try{const data=await api("/api/admin/summary");const s=data.stats||{};$("summaryStrip").innerHTML=[["Available",s.available_items||0],["Pending",s.pending_items||0],["Sold",s.sold_items||0],["Hidden",s.hidden_items||0],["Published Sales",s.published_sales||0],["New Inquiries",s.new_inquiries||0]].map(([label,value])=>'<div class="summary-box"><strong>'+value+'</strong><span>'+esc(label)+'</span></div>').join("")}catch{}}
 function renderPreview(){const salesById=new Map(state.sales.map(s=>[s.id,s]));const visible=state.items.filter(item=>item.status!=="hidden"&&(!item.sale_id||salesById.get(item.sale_id)?.status==="published"));$("previewEmpty").classList.toggle("hidden",visible.length>0);$("previewGrid").innerHTML=visible.map(item=>{const img=item.images?.[0];const media=img?'<img src="'+esc(img.url)+'" alt="'+esc(img.alt_text||item.title)+'">':'<div class="preview-placeholder">Photo coming soon</div>';return '<article class="preview-card">'+media+'<div class="preview-copy"><div class="meta"><span class="badge '+esc(item.status)+'">'+esc(item.status)+'</span><span class="badge">'+esc(item.item_code||"")+'</span></div><h3>'+esc(item.title)+'</h3><div class="preview-price">'+esc(money(item.price_cents))+'</div><p>'+esc(item.description||item.condition_text||"Vintage piece from Saddle & Stone.")+'</p><span class="preview-inquire">Ask About This Item</span></div></article>'}).join("")}
 async function bootstrap(){try{const data=await api("/api/auth/me");state.csrf=data.csrf_token;state.admin=data.admin;showPortal();await Promise.all([loadItems(),loadSales(),loadSummary()]);renderPreview()}catch{showLogin()}}
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginError").textContent="";try{const data=await api("/api/auth/login",{method:"POST",body:JSON.stringify({email:$("loginEmail").value,password:$("loginPassword").value})});state.csrf=data.csrf_token;state.admin=data.admin;$("loginPassword").value="";showPortal();await Promise.all([loadItems(),loadSales()])}catch(err){$("loginError").textContent=err.message}});
@@ -18,7 +18,41 @@ async function activateTab(name){const btn=document.querySelector('[data-tab="'+
 document.querySelectorAll("[data-tab]").forEach(btn=>btn.addEventListener("click",()=>activateTab(btn.dataset.tab)));
 function populateSaleSelect(){const sel=$("itemSale"),current=sel.value;sel.innerHTML='<option value="">No linked sale</option>'+state.sales.map(s=>'<option value="'+s.id+'">'+esc(s.title)+' ('+esc(s.status)+')</option>').join("");sel.value=current}
 async function loadItems(){const data=await api("/api/admin/items");state.items=data.items||[];renderItems();renderPreview();loadSummary()}
-function renderItems(){$("itemsEmpty").classList.toggle("hidden",state.items.length>0);$("itemsList").innerHTML=state.items.map(item=>{const img=item.images?.[0];const media=img?'<img class="card-image" src="'+esc(img.url)+'" alt="'+esc(img.alt_text||item.title)+'">':'<div class="card-image card-placeholder">No photo</div>';return '<article class="card">'+media+'<div><h3>'+esc(item.title)+'</h3><div class="meta"><span class="badge '+esc(item.status)+'">'+esc(item.status)+'</span><span class="badge">'+esc(item.item_code||"")+'</span>'+(item.featured?'<span class="badge">Featured</span>':"")+'</div><div>'+esc(money(item.price_cents))+'</div><div class="card-actions"><button type="button" data-edit-item="'+item.id+'">Edit</button><button type="button" class="ghost" data-hide-item="'+item.id+'">Hide</button></div></div></article>'}).join("");document.querySelectorAll("[data-edit-item]").forEach(b=>b.addEventListener("click",()=>openItem(Number(b.dataset.editItem))));document.querySelectorAll("[data-hide-item]").forEach(b=>b.addEventListener("click",()=>hideItem(Number(b.dataset.hideItem))))}
+function renderItems(){
+  $("itemsEmpty").classList.toggle("hidden",state.items.length>0);
+  $("itemsList").innerHTML=state.items.map(item=>{
+    const img=item.images?.[0];
+    const media=img
+      ? '<img class="card-image" src="'+esc(img.url)+'" alt="'+esc(img.alt_text||item.title)+'">'
+      : '<div class="card-image card-placeholder">No photo</div>';
+    const hidden=item.status==="hidden";
+    const statusLabel=hidden?"HIDDEN — NOT PUBLIC":item.status;
+    const visibilityNote=hidden
+      ? '<div class="hidden-warning">This item is hidden and cannot be seen in the public catalog.</div>'
+      : '';
+    const visibilityAction=hidden
+      ? '<button type="button" class="ghost" data-unhide-item="'+item.id+'">Make Available</button>'
+      : '<button type="button" class="ghost" data-hide-item="'+item.id+'">Hide</button>';
+
+    return '<article class="card '+(hidden?'hidden-item':'')+'">'+media+
+      '<div><h3>'+esc(item.title)+'</h3>'+
+      '<div class="meta"><span class="badge '+esc(item.status)+'">'+esc(statusLabel)+'</span>'+
+      '<span class="badge">'+esc(item.item_code||"")+'</span>'+
+      (item.featured?'<span class="badge">Featured</span>':'')+'</div>'+
+      visibilityNote+
+      '<div>'+esc(money(item.price_cents))+'</div>'+
+      '<div class="card-actions">'+
+        '<button type="button" data-edit-item="'+item.id+'">Edit</button>'+
+        visibilityAction+
+        '<button type="button" class="danger" data-delete-item="'+item.id+'">Delete</button>'+
+      '</div></div></article>';
+  }).join("");
+
+  document.querySelectorAll("[data-edit-item]").forEach(b=>b.addEventListener("click",()=>openItem(Number(b.dataset.editItem))));
+  document.querySelectorAll("[data-hide-item]").forEach(b=>b.addEventListener("click",()=>hideItem(Number(b.dataset.hideItem))));
+  document.querySelectorAll("[data-unhide-item]").forEach(b=>b.addEventListener("click",()=>unhideItem(Number(b.dataset.unhideItem))));
+  document.querySelectorAll("[data-delete-item]").forEach(b=>b.addEventListener("click",()=>deleteItem(Number(b.dataset.deleteItem))));
+}
 $("newItemBtn").addEventListener("click",()=>openItem());$("cancelItemBtn").addEventListener("click",()=>$("itemForm").classList.add("hidden"));
 function openItem(id=null){const item=id?state.items.find(x=>x.id===id):null;$("itemId").value=item?.id||"";$("itemFormTitle").textContent=item?"Edit Item":"Add Item";$("itemTitle").value=item?.title||"";$("itemCategory").value=item?.category||"";$("itemPrice").value=item?.price_cents==null?"":(item.price_cents/100).toFixed(2);$("itemStatus").value=item?.status||"available";$("itemFeatured").checked=Boolean(item?.featured);$("itemCondition").value=item?.condition_text||"";$("itemDescription").value=item?.description||"";$("itemSale").value=item?.sale_id||"";$("imageInput").value="";renderItemImages(item);renderPendingImages();$("itemForm").classList.remove("hidden");$("itemForm").scrollIntoView({behavior:"smooth",block:"start"})}
 function renderItemImages(item){$("itemImages").innerHTML=(item?.images||[]).map(img=>'<div class="image-tile"><img src="'+esc(img.url)+'" alt="'+esc(img.alt_text||item.title)+'"><span class="saved-photo">Saved</span><button type="button" aria-label="Delete image" data-delete-image="'+img.id+'">×</button></div>').join("");document.querySelectorAll("[data-delete-image]").forEach(b=>b.addEventListener("click",()=>deleteImage(Number(b.dataset.deleteImage))))}
@@ -26,7 +60,31 @@ function renderPendingImages(){const files=[...$("imageInput").files];$("photoCo
 $("imageInput").addEventListener("change",renderPendingImages);
 async function uploadSelectedImages(itemId,files){if(!files.length)return;const body=new FormData();files.forEach(file=>body.append("images",file));await api("/api/admin/items/"+itemId+"/images",{method:"POST",body})}
 $("itemForm").addEventListener("submit",async e=>{e.preventDefault();const saveBtn=$("saveItemBtn");const selectedFiles=[...$("imageInput").files];saveBtn.disabled=true;saveBtn.textContent=selectedFiles.length?"Saving & uploading photos…":"Saving…";try{const id=$("itemId").value,rawPrice=$("itemPrice").value.trim();const body={title:$("itemTitle").value,category:$("itemCategory").value,price_cents:rawPrice===""?null:Math.round(Number(rawPrice)*100),status:$("itemStatus").value,featured:$("itemFeatured").checked,condition_text:$("itemCondition").value,description:$("itemDescription").value,sale_id:$("itemSale").value||null};const data=await api(id?"/api/admin/items/"+id:"/api/admin/items",{method:id?"PUT":"POST",body:JSON.stringify(body)});try{await uploadSelectedImages(data.item.id,selectedFiles)}catch(photoErr){await loadItems();openItem(data.item.id);flash("Item saved, but the photos did not upload: "+photoErr.message);return}$("imageInput").value="";await loadItems();openItem(data.item.id);flash(selectedFiles.length?"Item and photos saved.":"Item saved.")}catch(err){flash(err.message)}finally{saveBtn.disabled=false;saveBtn.textContent="Save Item"}});
-async function hideItem(id){if(!confirm("Hide this item from the public catalog?"))return;try{await api("/api/admin/items/"+id,{method:"DELETE"});await loadItems();flash("Item hidden.")}catch(err){flash(err.message)}}
+async function hideItem(id){
+  const item=state.items.find(x=>x.id===id);
+  if(!confirm('Hide "'+(item?.title||"this item")+'" from the public catalog?\n\nIt will stay in the Owner Portal and can be restored later.'))return;
+  try{await api("/api/admin/items/"+id,{method:"DELETE"});await loadItems();flash("Item hidden from the public catalog.")}catch(err){flash(err.message)}
+}
+async function unhideItem(id){
+  const item=state.items.find(x=>x.id===id);if(!item)return;
+  try{
+    const body={title:item.title,category:item.category,price_cents:item.price_cents,status:"available",featured:item.featured,condition_text:item.condition_text,description:item.description,sale_id:item.sale_id};
+    await api("/api/admin/items/"+id,{method:"PUT",body:JSON.stringify(body)});
+    await loadItems();flash("Item is available in the public catalog again.");
+  }catch(err){flash(err.message)}
+}
+async function deleteItem(id){
+  const item=state.items.find(x=>x.id===id);if(!item)return;
+  const warning='Permanently delete "'+item.title+'"?\n\nThis cannot be undone. Its uploaded photos and any inquiries attached to this item will also be removed.';
+  if(!confirm(warning))return;
+  if(!confirm("Final confirmation: permanently remove this item?"))return;
+  try{
+    await api("/api/admin/items/"+id+"/permanent",{method:"DELETE"});
+    if(String($("itemId").value)===String(id))$("itemForm").classList.add("hidden");
+    await loadItems();
+    flash("Item permanently deleted.");
+  }catch(err){flash(err.message)}
+}
 
 async function deleteImage(imageId){const itemId=$("itemId").value;if(!itemId||!confirm("Delete this photo?"))return;try{await api("/api/admin/items/"+itemId+"/images/"+imageId,{method:"DELETE"});await loadItems();openItem(Number(itemId));flash("Photo removed.")}catch(err){flash(err.message)}}
 async function loadSales(){const data=await api("/api/admin/sales");state.sales=data.sales||[];populateSaleSelect();renderSales();renderPreview();renderCalendar();loadSummary()}

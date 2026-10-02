@@ -529,6 +529,7 @@ app.get("/api/admin/summary", (_req, res) => {
     available_items: Number(db.prepare("SELECT COUNT(*) AS c FROM items WHERE status = 'available'").get().c),
     pending_items: Number(db.prepare("SELECT COUNT(*) AS c FROM items WHERE status = 'pending'").get().c),
     sold_items: Number(db.prepare("SELECT COUNT(*) AS c FROM items WHERE status = 'sold'").get().c),
+    hidden_items: Number(db.prepare("SELECT COUNT(*) AS c FROM items WHERE status = 'hidden'").get().c),
     published_sales: Number(db.prepare("SELECT COUNT(*) AS c FROM sales WHERE status = 'published'").get().c),
     new_inquiries: Number(db.prepare("SELECT COUNT(*) AS c FROM inquiries WHERE status = 'new'").get().c)
   };
@@ -647,6 +648,47 @@ app.delete("/api/admin/items/:id", csrfRequired, (req, res) => {
     `).run(id);
 
     res.json({ ok: true, item: getItemById(id) });
+  } catch (error) {
+    res.status(error.status || 400).json({ error: error.message });
+  }
+});
+
+app.delete("/api/admin/items/:id/permanent", csrfRequired, (req, res) => {
+  try {
+    const id = requirePositiveId(req.params.id);
+    const item = db.prepare("SELECT id, title, item_code FROM items WHERE id = ?").get(id);
+    if (!item) return res.status(404).json({ error: "Item not found." });
+
+    const images = db.prepare(
+      "SELECT filename FROM item_images WHERE item_id = ?"
+    ).all(id);
+
+    db.exec("BEGIN IMMEDIATE");
+    try {
+      // Foreign-key cascades remove item_images and inquiries.
+      db.prepare("DELETE FROM items WHERE id = ?").run(id);
+      db.exec("COMMIT");
+    } catch (error) {
+      db.exec("ROLLBACK");
+      throw error;
+    }
+
+    // Remove image files after the database commit. Missing files are harmless.
+    for (const image of images) {
+      try {
+        fs.unlinkSync(path.join(config.uploadDir, image.filename));
+      } catch {}
+    }
+
+    res.json({
+      ok: true,
+      deleted: {
+        id,
+        item_code: item.item_code,
+        title: item.title,
+        images_removed: images.length
+      }
+    });
   } catch (error) {
     res.status(error.status || 400).json({ error: error.message });
   }

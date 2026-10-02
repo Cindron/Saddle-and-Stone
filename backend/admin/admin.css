@@ -72,3 +72,38 @@ label{display:grid;gap:7px;font-size:13px;font-weight:700;color:#5f4d40}input,se
 
 .maintenance-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}.maintenance-actions .button-link{margin-top:0}
 .backup-list{display:grid;gap:5px;margin-top:14px}.backup-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted)}.backup-row strong{color:var(--ink);font-weight:600}
+
+/* v0.10.1 — item visibility + permanent removal */
+.card.hidden-item{
+  border:2px dashed #9a6a56;
+  background:#f2e5dc;
+  box-shadow:none;
+}
+.card.hidden-item .card-image{
+  opacity:.58;
+  filter:grayscale(.25) sepia(.15);
+}
+.badge.hidden{
+  background:#7c493b!important;
+  color:#fff!important;
+  border:1px solid #63362c;
+}
+.hidden-warning{
+  margin:10px 0;
+  padding:9px 10px;
+  border-left:4px solid #9a4b38;
+  background:#ead3c9;
+  color:#69392e;
+  font-size:11px;
+  font-weight:700;
+  line-height:1.35;
+}
+button.danger{
+  background:#8b3329;
+  border-color:#8b3329;
+  color:#fff;
+}
+button.danger:hover{background:#72291f;border-color:#72291f}
+@media(max-width:760px){
+  .card-actions button{min-height:38px}
+}

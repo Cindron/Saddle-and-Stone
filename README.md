@@ -364,3 +364,17 @@ static public pages.
 
 Home, About, Services, Sales and Contact remain untouched until the dynamic
 catalog/calendar review builds are approved for final navigation integration.
+
+
+## v0.10.1 — item visibility & deletion
+
+Owner catalog management now clearly separates reversible hiding from permanent
+deletion.
+
+- Hidden items are visually highlighted and labelled "HIDDEN — NOT PUBLIC".
+- Hidden items can be restored with **Make Available**.
+- Every item has a separate **Delete** action with two-step confirmation.
+- Permanent deletion also removes uploaded image files and item inquiries.
+- Dashboard summary includes a Hidden count.
+
+Public site presentation is unchanged.
