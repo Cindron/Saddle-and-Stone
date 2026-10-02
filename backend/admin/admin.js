@@ -1,4 +1,6 @@
-const state={csrf:"",admin:null,items:[],sales:[],inquiries:[]};
+const state={csrf:"",admin:null,items:[],sales:[],inquiries:[],settings:{},system:null};
+let calendarCursor=new Date();
+calendarCursor.setDate(1);
 const $=id=>document.getElementById(id);
 const loginView=$("loginView"),portalView=$("portalView"),message=$("portalMessage");
 function money(cents){if(cents===null||cents===undefined)return"Price on request";return new Intl.NumberFormat("en-CA",{style:"currency",currency:"CAD"}).format(cents/100)}
@@ -6,13 +8,14 @@ function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt
 function flash(t){message.textContent=t;message.classList.remove("hidden");clearTimeout(flash.timer);flash.timer=setTimeout(()=>message.classList.add("hidden"),3000)}
 async function api(url,options={}){const init={credentials:"same-origin",...options,headers:{...(options.headers||{})}};if(options.body&&!(options.body instanceof FormData)&&!init.headers["Content-Type"])init.headers["Content-Type"]="application/json";if(state.csrf&&!["GET","HEAD"].includes((init.method||"GET").toUpperCase()))init.headers["X-CSRF-Token"]=state.csrf;const res=await fetch(url,init);const data=await res.json().catch(()=>({}));if(res.status===401){showLogin();throw new Error("Please sign in again.")}if(!res.ok)throw new Error(data.error||"Request failed.");return data}
 function showLogin(){state.csrf="";state.admin=null;portalView.classList.add("hidden");loginView.classList.remove("hidden")}
-function showPortal(){loginView.classList.add("hidden");portalView.classList.remove("hidden");$("signedInAs").textContent=state.admin?.email||""}
+function showPortal(){loginView.classList.add("hidden");portalView.classList.remove("hidden");$("signedInAs").textContent=(state.admin?.display_name?state.admin.display_name+" · ":"")+(state.admin?.email||"")}
 async function loadSummary(){try{const data=await api("/api/admin/summary");const s=data.stats||{};$("summaryStrip").innerHTML=[["Available",s.available_items||0],["Pending",s.pending_items||0],["Sold",s.sold_items||0],["Published Sales",s.published_sales||0],["New Inquiries",s.new_inquiries||0]].map(([label,value])=>'<div class="summary-box"><strong>'+value+'</strong><span>'+esc(label)+'</span></div>').join("")}catch{}}
 function renderPreview(){const salesById=new Map(state.sales.map(s=>[s.id,s]));const visible=state.items.filter(item=>item.status!=="hidden"&&(!item.sale_id||salesById.get(item.sale_id)?.status==="published"));$("previewEmpty").classList.toggle("hidden",visible.length>0);$("previewGrid").innerHTML=visible.map(item=>{const img=item.images?.[0];const media=img?'<img src="'+esc(img.url)+'" alt="'+esc(img.alt_text||item.title)+'">':'<div class="preview-placeholder">Photo coming soon</div>';return '<article class="preview-card">'+media+'<div class="preview-copy"><div class="meta"><span class="badge '+esc(item.status)+'">'+esc(item.status)+'</span><span class="badge">'+esc(item.item_code||"")+'</span></div><h3>'+esc(item.title)+'</h3><div class="preview-price">'+esc(money(item.price_cents))+'</div><p>'+esc(item.description||item.condition_text||"Vintage piece from Saddle & Stone.")+'</p><span class="preview-inquire">Ask About This Item</span></div></article>'}).join("")}
 async function bootstrap(){try{const data=await api("/api/auth/me");state.csrf=data.csrf_token;state.admin=data.admin;showPortal();await Promise.all([loadItems(),loadSales(),loadSummary()]);renderPreview()}catch{showLogin()}}
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginError").textContent="";try{const data=await api("/api/auth/login",{method:"POST",body:JSON.stringify({email:$("loginEmail").value,password:$("loginPassword").value})});state.csrf=data.csrf_token;state.admin=data.admin;$("loginPassword").value="";showPortal();await Promise.all([loadItems(),loadSales()])}catch(err){$("loginError").textContent=err.message}});
 $("logoutBtn").addEventListener("click",async()=>{try{await api("/api/auth/logout",{method:"POST"})}catch{}showLogin()});
-document.querySelectorAll("[data-tab]").forEach(btn=>btn.addEventListener("click",async()=>{document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b===btn));document.querySelectorAll(".tab-panel").forEach(p=>p.classList.add("hidden"));$(btn.dataset.tab+"Tab").classList.remove("hidden");if(btn.dataset.tab==="inquiries")await loadInquiries();if(btn.dataset.tab==="preview")renderPreview()}));
+async function activateTab(name){const btn=document.querySelector('[data-tab="'+name+'"]');if(!btn)return;document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b===btn));document.querySelectorAll(".tab-panel").forEach(p=>p.classList.add("hidden"));$(name+"Tab").classList.remove("hidden");if(name==="inquiries")await loadInquiries();if(name==="preview")renderPreview();if(name==="calendar")renderCalendar();if(name==="maintenance")await loadMaintenance()}
+document.querySelectorAll("[data-tab]").forEach(btn=>btn.addEventListener("click",()=>activateTab(btn.dataset.tab)));
 function populateSaleSelect(){const sel=$("itemSale"),current=sel.value;sel.innerHTML='<option value="">No linked sale</option>'+state.sales.map(s=>'<option value="'+s.id+'">'+esc(s.title)+' ('+esc(s.status)+')</option>').join("");sel.value=current}
 async function loadItems(){const data=await api("/api/admin/items");state.items=data.items||[];renderItems();renderPreview();loadSummary()}
 function renderItems(){$("itemsEmpty").classList.toggle("hidden",state.items.length>0);$("itemsList").innerHTML=state.items.map(item=>{const img=item.images?.[0];const media=img?'<img class="card-image" src="'+esc(img.url)+'" alt="'+esc(img.alt_text||item.title)+'">':'<div class="card-image card-placeholder">No photo</div>';return '<article class="card">'+media+'<div><h3>'+esc(item.title)+'</h3><div class="meta"><span class="badge '+esc(item.status)+'">'+esc(item.status)+'</span><span class="badge">'+esc(item.item_code||"")+'</span>'+(item.featured?'<span class="badge">Featured</span>':"")+'</div><div>'+esc(money(item.price_cents))+'</div><div class="card-actions"><button type="button" data-edit-item="'+item.id+'">Edit</button><button type="button" class="ghost" data-hide-item="'+item.id+'">Hide</button></div></div></article>'}).join("");document.querySelectorAll("[data-edit-item]").forEach(b=>b.addEventListener("click",()=>openItem(Number(b.dataset.editItem))));document.querySelectorAll("[data-hide-item]").forEach(b=>b.addEventListener("click",()=>hideItem(Number(b.dataset.hideItem))))}
@@ -26,12 +29,51 @@ $("itemForm").addEventListener("submit",async e=>{e.preventDefault();const saveB
 async function hideItem(id){if(!confirm("Hide this item from the public catalog?"))return;try{await api("/api/admin/items/"+id,{method:"DELETE"});await loadItems();flash("Item hidden.")}catch(err){flash(err.message)}}
 
 async function deleteImage(imageId){const itemId=$("itemId").value;if(!itemId||!confirm("Delete this photo?"))return;try{await api("/api/admin/items/"+itemId+"/images/"+imageId,{method:"DELETE"});await loadItems();openItem(Number(itemId));flash("Photo removed.")}catch(err){flash(err.message)}}
-async function loadSales(){const data=await api("/api/admin/sales");state.sales=data.sales||[];populateSaleSelect();renderSales();renderPreview();loadSummary()}
+async function loadSales(){const data=await api("/api/admin/sales");state.sales=data.sales||[];populateSaleSelect();renderSales();renderPreview();renderCalendar();loadSummary()}
+function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
+function renderCalendar(){
+  const title=$("calendarTitle"),grid=$("calendarGrid");if(!title||!grid)return;
+  const year=calendarCursor.getFullYear(),month=calendarCursor.getMonth();
+  title.textContent=new Intl.DateTimeFormat("en-CA",{month:"long",year:"numeric"}).format(calendarCursor);
+  const first=new Date(year,month,1),start=new Date(year,month,1-first.getDay()),today=new Date();today.setHours(0,0,0,0);
+  let out="";
+  for(let i=0;i<42;i++){
+    const day=new Date(start);day.setDate(start.getDate()+i);
+    const outside=day.getMonth()!==month;
+    const events=state.sales.filter(s=>{if(!s.start_at)return false;const d=new Date(s.start_at);return !Number.isNaN(d.getTime())&&sameDay(d,day)});
+    out+='<div class="calendar-day'+(outside?" outside":"")+(sameDay(day,today)?" today":"")+'"><span class="calendar-date">'+day.getDate()+'</span>'+events.map(s=>'<button type="button" class="calendar-event '+esc(s.status)+'" data-calendar-sale="'+s.id+'">'+esc(s.title)+'</button>').join("")+'</div>';
+  }
+  grid.innerHTML=out;
+  document.querySelectorAll("[data-calendar-sale]").forEach(btn=>btn.addEventListener("click",async()=>{await activateTab("sales");openSale(Number(btn.dataset.calendarSale))}));
+}
+$("calendarPrev").addEventListener("click",()=>{calendarCursor.setMonth(calendarCursor.getMonth()-1);renderCalendar()});
+$("calendarNext").addEventListener("click",()=>{calendarCursor.setMonth(calendarCursor.getMonth()+1);renderCalendar()});
+$("calendarToday").addEventListener("click",()=>{calendarCursor=new Date();calendarCursor.setDate(1);renderCalendar()});
+
 function renderSales(){$("salesEmpty").classList.toggle("hidden",state.sales.length>0);$("salesList").innerHTML=state.sales.map(s=>'<article class="card"><div class="card-image card-placeholder">Estate<br>Sale</div><div><h3>'+esc(s.title)+'</h3><div class="meta"><span class="badge">'+esc(s.status)+'</span><span class="badge">'+(s.item_count||0)+' items</span></div><div class="muted">'+esc(s.city||"")+(s.region?", "+esc(s.region):"")+'</div><div class="card-actions"><button type="button" data-edit-sale="'+s.id+'">Edit</button></div></div></article>').join("");document.querySelectorAll("[data-edit-sale]").forEach(b=>b.addEventListener("click",()=>openSale(Number(b.dataset.editSale))))}
 $("newSaleBtn").addEventListener("click",()=>openSale());$("cancelSaleBtn").addEventListener("click",()=>$("saleForm").classList.add("hidden"));
 function localDateValue(v){return v?String(v).slice(0,16):""}
 function openSale(id=null){const s=id?state.sales.find(x=>x.id===id):null;$("saleId").value=s?.id||"";$("saleFormTitle").textContent=s?"Edit Sale":"Add Sale";$("saleTitle").value=s?.title||"";$("saleStatus").value=s?.status||"draft";$("saleStart").value=localDateValue(s?.start_at);$("saleEnd").value=localDateValue(s?.end_at);$("saleCity").value=s?.city||"";$("saleRegion").value=s?.region||"";$("saleAddress").value=s?.address_public||"";$("saleSummary").value=s?.summary||"";$("saleForm").classList.remove("hidden");$("saleForm").scrollIntoView({behavior:"smooth",block:"start"})}
 $("saleForm").addEventListener("submit",async e=>{e.preventDefault();const id=$("saleId").value,body={title:$("saleTitle").value,status:$("saleStatus").value,start_at:$("saleStart").value||null,end_at:$("saleEnd").value||null,city:$("saleCity").value,region:$("saleRegion").value,address_public:$("saleAddress").value,summary:$("saleSummary").value};try{await api(id?"/api/admin/sales/"+id:"/api/admin/sales",{method:id?"PUT":"POST",body:JSON.stringify(body)});$("saleForm").classList.add("hidden");await loadSales();flash("Sale saved.")}catch(err){flash(err.message)}});
+async function loadMaintenance(){
+  try{
+    const [settingsData,systemData]=await Promise.all([api("/api/admin/site-settings"),api("/api/admin/system")]);
+    state.settings=settingsData.settings||{};state.system=systemData;
+    $("settingBusinessName").value=state.settings.business_name||"";
+    $("settingTagline").value=state.settings.tagline||"";
+    $("settingPhone").value=state.settings.phone||"";
+    $("settingEmail").value=state.settings.email||"";
+    $("settingServiceArea").value=state.settings.service_area||"";
+    $("settingInstagram").value=state.settings.instagram||"";
+    $("settingFacebook").value=state.settings.facebook||"";
+    const mb=((Number(state.system.database_bytes)||0)/1048576).toFixed(2);
+    $("systemStatus").innerHTML=[["Backend","Healthy"],["Schema","v"+esc(state.system.schema_version||"—")],["Database",mb+" MB"],["Uploaded photos",String(state.system.upload_count||0)],["Server backups",String(state.system.backup_count||0)]].map(([label,value])=>'<div class="system-line"><span>'+label+'</span><strong>'+value+'</strong></div>').join("");
+    $("adminAccessCard").classList.toggle("hidden",state.admin?.role!=="owner");
+  }catch(err){flash(err.message)}
+}
+$("siteSettingsForm").addEventListener("submit",async e=>{e.preventDefault();try{const body={business_name:$("settingBusinessName").value,tagline:$("settingTagline").value,phone:$("settingPhone").value,email:$("settingEmail").value,service_area:$("settingServiceArea").value,instagram:$("settingInstagram").value,facebook:$("settingFacebook").value};const data=await api("/api/admin/site-settings",{method:"PUT",body:JSON.stringify(body)});state.settings=data.settings||body;flash("Site details saved.")}catch(err){flash(err.message)}});
+$("refreshMaintenanceBtn").addEventListener("click",loadMaintenance);
+
 async function loadInquiries(){try{const data=await api("/api/admin/inquiries");state.inquiries=data.inquiries||[];renderInquiries();loadSummary()}catch(err){flash(err.message)}}
 function renderInquiries(){$("inquiriesEmpty").classList.toggle("hidden",state.inquiries.length>0);$("inquiriesList").innerHTML=state.inquiries.map(q=>{const opts=["new","read","closed"].map(s=>'<option value="'+s+'" '+(q.status===s?"selected":"")+'>'+s+'</option>').join("");return '<article class="inquiry '+esc(q.status)+'"><div class="inquiry-head"><div><strong>'+esc(q.name)+'</strong><div class="muted">'+esc(q.item_code)+' · '+esc(q.item_title)+'</div></div><select data-inquiry-status="'+q.id+'">'+opts+'</select></div><p>'+esc(q.message||"No message supplied.")+'</p><div class="muted">'+esc(q.email)+(q.phone?" · "+esc(q.phone):"")+'</div></article>'}).join("");document.querySelectorAll("[data-inquiry-status]").forEach(sel=>sel.addEventListener("change",async()=>{try{await api("/api/admin/inquiries/"+sel.dataset.inquiryStatus,{method:"PATCH",body:JSON.stringify({status:sel.value})});await loadInquiries()}catch(err){flash(err.message)}}))}
 $("refreshInquiriesBtn").addEventListener("click",loadInquiries);
