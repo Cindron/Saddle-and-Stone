@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <title>Saddle & Stone Owner Portal</title>
-  <link rel="stylesheet" href="./admin.css?v=0.9.3">
+  <link rel="stylesheet" href="./admin.css?v=0.10.0">
 </head>
 <body>
   <main class="shell">
@@ -37,9 +37,10 @@
       <nav class="tabs" aria-label="Owner portal sections">
         <button data-tab="items" class="active">Catalog</button>
         <button data-tab="sales">Sales</button>
+        <button data-tab="calendar">Calendar</button>
         <button data-tab="inquiries">Inquiries</button>
         <button data-tab="preview">Preview</button>
-        <button data-tab="settings">Settings</button>
+        <button data-tab="maintenance">Maintenance</button>
       </nav>
 
       <section id="itemsTab" class="tab-panel">
@@ -131,6 +132,31 @@
         <div id="salesList" class="cards"></div>
       </section>
 
+      <section id="calendarTab" class="tab-panel hidden">
+        <div class="section-head calendar-head">
+          <div>
+            <p class="eyebrow">CALENDAR</p>
+            <h2>Estate Sale Calendar</h2>
+            <p class="muted">Published sales appear publicly; drafts stay private.</p>
+          </div>
+          <div class="calendar-actions">
+            <button id="calendarPrev" type="button" class="ghost">←</button>
+            <strong id="calendarTitle"></strong>
+            <button id="calendarNext" type="button" class="ghost">→</button>
+            <button id="calendarToday" type="button">Today</button>
+          </div>
+        </div>
+        <div class="calendar-weekdays" aria-hidden="true">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+        <div id="calendarGrid" class="calendar-grid"></div>
+        <div class="calendar-legend">
+          <span><i class="dot published"></i> Published</span>
+          <span><i class="dot draft"></i> Draft</span>
+          <span><i class="dot archived"></i> Archived</span>
+        </div>
+      </section>
+
       <section id="inquiriesTab" class="tab-panel hidden">
         <div class="section-head">
           <div><p class="eyebrow">INQUIRIES</p><h2>Item Questions</h2></div>
@@ -152,21 +178,49 @@
         <div id="previewGrid" class="public-preview-grid"></div>
       </section>
 
-      <section id="settingsTab" class="tab-panel hidden">
+      <section id="maintenanceTab" class="tab-panel hidden">
         <div class="section-head">
-          <div><p class="eyebrow">SETTINGS</p><h2>Ownership &amp; Security</h2></div>
+          <div>
+            <p class="eyebrow">MAINTENANCE</p>
+            <h2>Site Maintenance</h2>
+            <p class="muted">Everything here is portable with the site when ownership or hosting changes.</p>
+          </div>
+          <button id="refreshMaintenanceBtn" class="ghost" type="button">Refresh</button>
         </div>
 
         <div class="settings-grid">
+          <article class="settings-card span-two">
+            <h3>Business &amp; Contact Details</h3>
+            <p class="muted">These are stored in the portable site database for the current or future web administrator.</p>
+            <form id="siteSettingsForm" class="maintenance-form">
+              <div class="grid two">
+                <label>Business name<input id="settingBusinessName" maxlength="160"></label>
+                <label>Tagline<input id="settingTagline" maxlength="200"></label>
+                <label>Phone<input id="settingPhone" maxlength="80"></label>
+                <label>Email<input id="settingEmail" type="email" maxlength="200"></label>
+                <label>Instagram<input id="settingInstagram" type="url" maxlength="500"></label>
+                <label>Facebook<input id="settingFacebook" type="url" maxlength="500"></label>
+              </div>
+              <label>Service area<input id="settingServiceArea" maxlength="300"></label>
+              <div class="editor-actions"><button type="submit">Save Site Details</button></div>
+            </form>
+          </article>
+
+          <article class="settings-card">
+            <h3>System Health</h3>
+            <div id="systemStatus" class="system-status">Loading…</div>
+            <p class="muted">This checks the portable database, uploads and backup area.</p>
+          </article>
+
           <article class="settings-card">
             <h3>Export Your Data</h3>
-            <p class="muted">Download a portable JSON export of sales, catalog items, image records and inquiries. Passwords and sessions are never included.</p>
+            <p class="muted">Download sales, catalog records, image records and inquiries. Passwords and sessions are never included.</p>
             <a class="button-link" href="/api/admin/export.json" download>Download Data Export</a>
           </article>
 
           <article class="settings-card">
-            <h3>Change Owner Password</h3>
-            <p class="muted">Changing the password signs out every active owner session.</p>
+            <h3>Change Your Password</h3>
+            <p class="muted">Changing the password signs out every active session for this account.</p>
             <form id="passwordForm">
               <label>Current password<input id="currentPassword" type="password" autocomplete="current-password" minlength="12" required></label>
               <label>New password<input id="newPassword" type="password" autocomplete="new-password" minlength="12" required></label>
@@ -176,9 +230,24 @@
             </form>
           </article>
 
-          <article class="settings-card">
+          <article id="adminAccessCard" class="settings-card span-two">
+            <h3>Web Administrator Access</h3>
+            <p class="muted">The owner can give a future web administrator access without sharing VPS or server credentials.</p>
+            <form id="adminUserForm" class="admin-user-form">
+              <div class="grid three">
+                <label>Name<input id="adminDisplayName" maxlength="120"></label>
+                <label>Email<input id="adminEmail" type="email" maxlength="200" required></label>
+                <label>Temporary password<input id="adminTempPassword" type="password" minlength="12" required></label>
+              </div>
+              <button type="submit">Add Web Administrator</button>
+              <p id="adminUserError" class="error" aria-live="polite"></p>
+            </form>
+            <div id="adminUsersList" class="admin-users"></div>
+          </article>
+
+          <article class="settings-card span-two">
             <h3>Client Ownership</h3>
-            <p class="muted">The catalog database and uploaded images live outside the application container so the complete site can be moved to Faith’s own domain or VPS without rebuilding her content.</p>
+            <p class="muted">The catalog database, administrator accounts and uploaded images live outside the application container. They can move with the site to a new domain or client-owned VPS.</p>
             <p class="muted">No Cindron account or licensing service is required for the site to operate.</p>
           </article>
         </div>
@@ -187,6 +256,6 @@
       <p id="portalMessage" class="toast hidden" aria-live="polite"></p>
     </section>
   </main>
-  <script src="./admin.js?v=0.9.3" defer></script>
+  <script src="./admin.js?v=0.10.0" defer></script>
 </body>
 </html>

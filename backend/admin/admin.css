@@ -48,3 +48,24 @@ label{display:grid;gap:7px;font-size:13px;font-weight:700;color:#5f4d40}input,se
 .image-tile .pending-photo{background:rgba(70,81,59,.9)}
 #saveItemBtn:disabled{opacity:.6;cursor:wait}
 @media(max-width:560px){.photo-heading{flex-direction:column}.photo-count{align-self:flex-start}.photo-picker{width:100%}}
+
+/* v0.10.0 — owner calendar + handoff maintenance */
+.calendar-head{align-items:flex-end}
+.calendar-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.calendar-actions strong{min-width:150px;text-align:center;font:500 21px Georgia,serif}
+.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.calendar-weekdays{border:1px solid var(--line);border-bottom:0;background:#eadbc7}
+.calendar-weekdays span{padding:9px;text-align:center;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.calendar-grid{border-left:1px solid var(--line);border-top:1px solid var(--line)}
+.calendar-day{min-height:118px;padding:8px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:#fffaf3}
+.calendar-day.outside{background:#f2eadf;color:#a19182}
+.calendar-day.today{box-shadow:inset 0 0 0 2px var(--rust)}
+.calendar-date{display:block;margin-bottom:7px;font:600 14px Georgia,serif}
+.calendar-event{display:block;width:100%;margin:4px 0;padding:6px 7px;border:0;text-align:left;color:#fff;font-size:10px;line-height:1.2;cursor:pointer}
+.calendar-event.published{background:var(--olive)}.calendar-event.draft{background:#a26e45}.calendar-event.archived{background:#796d65}
+.calendar-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;color:var(--muted);font-size:11px}.calendar-legend span{display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}.dot.published{background:var(--olive)}.dot.draft{background:#a26e45}.dot.archived{background:#796d65}
+.settings-card.span-two{grid-column:1/-1}.maintenance-form>label{margin-top:14px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.system-status{display:grid;gap:8px;margin:15px 0}.system-line{display:flex;justify-content:space-between;gap:15px;padding:8px 0;border-bottom:1px solid var(--line)}.system-line strong{font-family:Georgia,serif}
+.admin-user-form{display:grid;gap:14px}.admin-users{display:grid;gap:8px;margin-top:18px}.admin-user{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:11px 12px;border:1px solid var(--line);background:#fffdf8}.admin-user-main{display:grid;gap:2px}.admin-user-main small{color:var(--muted)}.role-badge{display:inline-block;margin-left:7px;padding:3px 5px;background:#e8d8c3;font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+@media(max-width:800px){.grid.three{grid-template-columns:1fr}.calendar-weekdays span{font-size:8px;padding:7px 2px}.calendar-day{min-height:90px;padding:5px}.calendar-event{font-size:9px;padding:5px}.calendar-head{align-items:flex-start}}
