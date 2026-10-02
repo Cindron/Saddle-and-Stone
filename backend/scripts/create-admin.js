@@ -63,11 +63,13 @@ if (existing) {
   `).run(salt, hash, existing.id);
   console.log("Admin password updated.");
 } else {
+  const totalAdmins = Number(db.prepare("SELECT COUNT(*) AS count FROM admins").get().count);
+  const role = totalAdmins === 0 ? "owner" : "admin";
   db.prepare(`
-    INSERT INTO admins(email, password_salt, password_hash)
-    VALUES (?, ?, ?)
-  `).run(email, salt, hash);
-  console.log("Admin created.");
+    INSERT INTO admins(email, password_salt, password_hash, role)
+    VALUES (?, ?, ?, ?)
+  `).run(email, salt, hash, role);
+  console.log(`Admin created with role: ${role}`);
 }
 
 db.close();
