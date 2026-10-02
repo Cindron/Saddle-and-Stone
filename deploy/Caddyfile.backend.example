@@ -1,0 +1,20 @@
+# EXAMPLE ONLY — do not install until the isolated backend has passed testing.
+# Replace the hostname if Faith moves to her own domain/VPS.
+
+saddleandstone.cindron.ca {
+    # Owner portal and API go to the application backend.
+    handle /owner* {
+        reverse_proxy saddle-stone-backend:8787
+    }
+    handle /api* {
+        reverse_proxy saddle-stone-backend:8787
+    }
+    handle /uploads* {
+        reverse_proxy saddle-stone-backend:8787
+    }
+
+    # Everything else stays on the approved public website.
+    handle {
+        reverse_proxy saddle-stone-web:80
+    }
+}

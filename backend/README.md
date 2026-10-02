@@ -142,3 +142,35 @@ inquiry review/status changes.
 The owner UI is not linked from the public website and the backend remains bound
 to `127.0.0.1:8787`. Nothing becomes public until reverse-proxy routes are
 deliberately added after testing.
+
+
+## Backend beta additions
+
+- Public sale endpoints are ready for the future calendar.
+- Catalog API supports search and pagination.
+- Owner dashboard summary endpoint added.
+- Client-owned JSON export endpoint added; it excludes passwords and sessions.
+- Owner password-change endpoint added; password rotation invalidates all sessions.
+- Optional generic SMTP notification sends Faith a copy of new item inquiries.
+  The inquiry is saved even if mail is unavailable.
+- Readiness endpoint validates the database/schema.
+- Upload batches validate all MIME types before writing images.
+
+## Automated self-test
+
+After the backend image has been built:
+
+```bash
+docker compose -f docker-compose.backend.yml run --rm backend npm run self-test
+```
+
+The self-test uses a temporary database and verifies:
+- owner creation
+- login/session/CSRF
+- item creation
+- public catalog read
+- item inquiry creation
+- dashboard summary
+- portable JSON export
+
+It deletes all temporary test data when finished.

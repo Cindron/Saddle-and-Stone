@@ -25,5 +25,14 @@ export const config = {
   sessionDays: int("SESSION_DAYS", 7, 1, 30),
   trustProxy: bool("TRUST_PROXY", true),
   maxUploadMb: int("MAX_UPLOAD_MB", 12, 1, 25),
-  maxImagesPerItem: int("MAX_IMAGES_PER_ITEM", 8, 1, 12)
+  maxImagesPerItem: int("MAX_IMAGES_PER_ITEM", 8, 1, 12),
+  smtp: {
+    host: process.env.SMTP_HOST || "",
+    port: int("SMTP_PORT", 587, 1, 65535),
+    secure: bool("SMTP_SECURE", false),
+    user: process.env.SMTP_USER || "",
+    pass: process.env.SMTP_PASS || "",
+    from: process.env.SMTP_FROM || "",
+    to: process.env.INQUIRY_NOTIFY_TO || ""
+  }
 };

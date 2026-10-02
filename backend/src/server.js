@@ -15,7 +15,8 @@ import {
   clearSession,
   authRequired,
   csrfRequired,
-  originGuard
+  originGuard,
+  rotateAdminPassword
 } from "./security.js";
 import {
   text,
@@ -23,6 +24,7 @@ import {
   salePayload,
   oneOf
 } from "./validators.js";
+import { sendInquiryNotification } from "./mailer.js";
 
 const app = express();
 if (config.trustProxy) app.set("trust proxy", 1);
@@ -133,6 +135,16 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true, service: "saddle-stone-backend" });
 });
 
+app.get("/ready", (_req, res) => {
+  try {
+    const row = db.prepare("SELECT value FROM app_meta WHERE key = 'schema_version'").get();
+    db.prepare("SELECT 1 AS ok").get();
+    res.json({ ok: true, schema_version: row?.value || "unknown" });
+  } catch {
+    res.status(503).json({ ok: false });
+  }
+});
+
 // Private owner portal UI. The API remains the security boundary; this static
 // shell contains no credentials and exposes no data unless authentication succeeds.
 app.use("/owner", express.static(path.join(process.cwd(), "admin"), {
@@ -189,11 +201,49 @@ app.post("/api/auth/logout", authRequired, csrfRequired, (req, res) => {
   res.json({ ok: true });
 });
 
-// PUBLIC CATALOG API — not wired into the approved front-end yet.
+// PUBLIC DATA API — not wired into the approved front-end yet.
+app.get("/api/sales", (_req, res) => {
+  const sales = db.prepare(`
+    SELECT s.*,
+      (SELECT COUNT(*) FROM items i
+       WHERE i.sale_id = s.id AND i.status <> 'hidden') AS item_count
+    FROM sales s
+    WHERE s.status = 'published'
+    ORDER BY COALESCE(s.start_at, s.created_at) ASC
+  `).all();
+
+  res.json({ sales });
+});
+
+app.get("/api/sales/:slug", (req, res) => {
+  const sale = db.prepare(`
+    SELECT s.*,
+      (SELECT COUNT(*) FROM items i
+       WHERE i.sale_id = s.id AND i.status <> 'hidden') AS item_count
+    FROM sales s
+    WHERE s.slug = ? AND s.status = 'published'
+  `).get(req.params.slug);
+
+  if (!sale) return res.status(404).json({ error: "Sale not found." });
+
+  const items = db.prepare(`
+    SELECT i.*, s.title AS sale_title, s.slug AS sale_slug
+    FROM items i
+    JOIN sales s ON s.id = i.sale_id
+    WHERE i.sale_id = ? AND i.status <> 'hidden'
+    ORDER BY i.featured DESC, i.created_at DESC
+  `).all(sale.id);
+
+  res.json({ sale, items: items.map(itemView) });
+});
+
 app.get("/api/catalog", (req, res) => {
   const status = oneOf(req.query.status, ["available", "pending", "sold"], "");
   const featured = req.query.featured === "1" || req.query.featured === "true";
   const category = text(req.query.category, 80);
+  const query = text(req.query.q, 120);
+  const limit = Math.max(1, Math.min(100, Number.parseInt(req.query.limit || "48", 10) || 48));
+  const offset = Math.max(0, Number.parseInt(req.query.offset || "0", 10) || 0);
 
   const where = ["i.status <> 'hidden'", "(i.sale_id IS NULL OR s.status = 'published')"];
   const args = [];
@@ -206,6 +256,18 @@ app.get("/api/catalog", (req, res) => {
     where.push("i.category = ?");
     args.push(category);
   }
+  if (query) {
+    where.push("(i.title LIKE ? OR i.description LIKE ? OR i.category LIKE ? OR i.item_code LIKE ?)");
+    const q = `%${query}%`;
+    args.push(q, q, q, q);
+  }
+
+  const count = Number(db.prepare(`
+    SELECT COUNT(*) AS count
+    FROM items i
+    LEFT JOIN sales s ON s.id = i.sale_id
+    WHERE ${where.join(" AND ")}
+  `).get(...args).count);
 
   const rows = db.prepare(`
     SELECT i.*, s.title AS sale_title, s.slug AS sale_slug
@@ -213,10 +275,10 @@ app.get("/api/catalog", (req, res) => {
     LEFT JOIN sales s ON s.id = i.sale_id
     WHERE ${where.join(" AND ")}
     ORDER BY i.featured DESC, i.created_at DESC
-    LIMIT 250
-  `).all(...args);
+    LIMIT ? OFFSET ?
+  `).all(...args, limit, offset);
 
-  res.json({ items: rows.map(itemView) });
+  res.json({ items: rows.map(itemView), total: count, limit, offset });
 });
 
 app.get("/api/catalog/:slug", (req, res) => {
@@ -233,7 +295,7 @@ app.get("/api/catalog/:slug", (req, res) => {
   res.json({ item: itemView(row) });
 });
 
-app.post("/api/catalog/:slug/inquiries", inquiryLimiter, (req, res) => {
+app.post("/api/catalog/:slug/inquiries", inquiryLimiter, asyncRoute(async (req, res) => {
   // Honeypot field. Real visitors never fill this.
   if (text(req.body?.website, 200)) return res.json({ ok: true });
 
@@ -258,19 +320,68 @@ app.post("/api/catalog/:slug/inquiries", inquiryLimiter, (req, res) => {
     return res.status(400).json({ error: "Email or phone is required." });
   }
 
-  db.prepare(`
+  const result = db.prepare(`
     INSERT INTO inquiries(item_id, name, email, phone, message)
     VALUES (?, ?, ?, ?, ?)
   `).run(row.id, name, email, phone, message);
 
+  const inquiry = {
+    id: Number(result.lastInsertRowid),
+    name, email, phone, message
+  };
+
+  // Email is best-effort. The database record remains the source of truth.
+  const notification = await sendInquiryNotification({ item: row, inquiry });
+
   res.status(201).json({
     ok: true,
-    item: { item_code: row.item_code, title: row.title }
+    item: { item_code: row.item_code, title: row.title },
+    notification_sent: Boolean(notification.sent)
   });
-});
+}));
 
 // Everything below here is owner-only.
 app.use("/api/admin", authRequired);
+
+app.get("/api/admin/summary", (_req, res) => {
+  const stats = {
+    total_items: Number(db.prepare("SELECT COUNT(*) AS c FROM items").get().c),
+    available_items: Number(db.prepare("SELECT COUNT(*) AS c FROM items WHERE status = 'available'").get().c),
+    pending_items: Number(db.prepare("SELECT COUNT(*) AS c FROM items WHERE status = 'pending'").get().c),
+    sold_items: Number(db.prepare("SELECT COUNT(*) AS c FROM items WHERE status = 'sold'").get().c),
+    published_sales: Number(db.prepare("SELECT COUNT(*) AS c FROM sales WHERE status = 'published'").get().c),
+    new_inquiries: Number(db.prepare("SELECT COUNT(*) AS c FROM inquiries WHERE status = 'new'").get().c)
+  };
+  res.json({ stats });
+});
+
+app.get("/api/admin/export.json", (_req, res) => {
+  const exportData = {
+    exported_at: new Date().toISOString(),
+    format_version: 1,
+    sales: db.prepare("SELECT * FROM sales ORDER BY id").all(),
+    items: db.prepare("SELECT * FROM items ORDER BY id").all(),
+    item_images: db.prepare("SELECT * FROM item_images ORDER BY item_id, sort_order, id").all(),
+    inquiries: db.prepare("SELECT * FROM inquiries ORDER BY id").all()
+  };
+  res.setHeader("Content-Disposition", `attachment; filename="saddle-stone-export-${new Date().toISOString().slice(0,10)}.json"`);
+  res.json(exportData);
+});
+
+app.post("/api/admin/change-password", csrfRequired, (req, res) => {
+  try {
+    rotateAdminPassword(
+      req.auth.admin_id,
+      String(req.body?.current_password || ""),
+      String(req.body?.new_password || "")
+    );
+    // Password rotation destroys the current session too.
+    res.setHeader("Set-Cookie", "ss_owner_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0");
+    res.json({ ok: true });
+  } catch (error) {
+    res.status(error.status || 400).json({ error: error.message });
+  }
+});
 
 app.get("/api/admin/items", (req, res) => {
   const rows = db.prepare(`
@@ -384,13 +495,14 @@ app.post(
     }
 
     const allowed = new Set(["image/jpeg", "image/png", "image/webp"]);
+    if (files.some(file => !allowed.has(file.mimetype))) {
+      return res.status(415).json({ error: "Only JPEG, PNG and WebP images are accepted." });
+    }
+
     const created = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      if (!allowed.has(file.mimetype)) {
-        return res.status(415).json({ error: "Only JPEG, PNG and WebP images are accepted." });
-      }
 
       // Decode + re-encode every upload. This validates that it is really an
       // image, strips embedded metadata and prevents arbitrary file uploads.

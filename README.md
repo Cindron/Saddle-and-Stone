@@ -283,3 +283,13 @@ The isolated backend now also contains a functional owner portal at `/owner/`
 for catalog items, photos, estate sales and inquiries. It is **not exposed or
 linked from the approved public website**. The production web container and
 normal deployment command remain unchanged.
+
+
+## v0.8.1 — backend beta hardening
+Still isolated from the approved public website.
+
+Added public sales API foundation, catalog search/pagination, owner summary,
+portable JSON export, owner password rotation, optional generic SMTP inquiry
+notifications, database readiness check and an automated backend self-test.
+
+The root public Dockerfile, compose file, HTML, CSS and JS remain unchanged.

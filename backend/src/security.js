@@ -137,3 +137,41 @@ export function originGuard(req, res, next) {
   }
   next();
 }
+
+
+export function rotateAdminPassword(adminId, currentPassword, newPassword) {
+  const admin = db.prepare(`
+    SELECT id, password_salt, password_hash
+    FROM admins
+    WHERE id = ?
+  `).get(adminId);
+
+  if (!admin || !verifyPassword(currentPassword, admin.password_salt, admin.password_hash)) {
+    const error = new Error("Current password is incorrect.");
+    error.status = 400;
+    throw error;
+  }
+
+  if (String(newPassword || "").length < 12) {
+    const error = new Error("New password must be at least 12 characters.");
+    error.status = 400;
+    throw error;
+  }
+
+  const { salt, hash } = hashPassword(newPassword);
+  db.exec("BEGIN IMMEDIATE");
+  try {
+    db.prepare(`
+      UPDATE admins
+      SET password_salt = ?, password_hash = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).run(salt, hash, adminId);
+
+    // Force every existing session to sign in with the new password.
+    db.prepare("DELETE FROM sessions WHERE admin_id = ?").run(adminId);
+    db.exec("COMMIT");
+  } catch (error) {
+    db.exec("ROLLBACK");
+    throw error;
+  }
+}
