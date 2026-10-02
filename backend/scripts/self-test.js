@@ -175,6 +175,36 @@ try {
     throw new Error("Portal backup failed.");
   }
 
+  const removable = await request("/api/admin/items", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrf
+    },
+    body: JSON.stringify({
+      title: "Temporary Deletion Test",
+      status: "available"
+    })
+  }, cookie);
+  if (removable.res.status !== 201) throw new Error("Deletion test item creation failed.");
+
+  const removableId = removable.data.item.id;
+  const hideCheck = await request("/api/admin/items/" + removableId, {
+    method: "DELETE",
+    headers: { "X-CSRF-Token": csrf }
+  }, cookie);
+  if (!hideCheck.res.ok || hideCheck.data.item?.status !== "hidden") {
+    throw new Error("Item hide failed.");
+  }
+
+  const deleteCheck = await request("/api/admin/items/" + removableId + "/permanent", {
+    method: "DELETE",
+    headers: { "X-CSRF-Token": csrf }
+  }, cookie);
+  if (!deleteCheck.res.ok || deleteCheck.data.deleted?.id !== removableId) {
+    throw new Error("Permanent item deletion failed.");
+  }
+
   const exportCheck = await request("/api/admin/export.json", {}, cookie);
   if (!exportCheck.res.ok || exportCheck.data.items?.length !== 1) {
     throw new Error("Portable export failed.");
