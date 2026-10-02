@@ -336,3 +336,13 @@ Save once. The portal creates the item record first and uploads the photos
 automatically in the same workflow.
 
 The approved public website and customer catalog presentation were not changed.
+
+
+## v0.9.3 — owner portal cache correction
+The new single-step photo UI was present in the deployed backend image, but the
+owner portal could continue serving the previous cached HTML/CSS/JS for several
+minutes on mobile browsers.
+
+Owner and catalog static review routes now send no-store/no-cache headers while
+development is active, and owner/catalog assets have new revision query strings.
+This does not change the approved public website.

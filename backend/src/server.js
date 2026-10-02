@@ -150,9 +150,12 @@ app.get("/ready", (_req, res) => {
 app.use("/owner", express.static(path.join(process.cwd(), "admin"), {
   index: "index.html",
   fallthrough: true,
-  etag: true,
-  maxAge: "5m",
-  dotfiles: "deny"
+  etag: false,
+  maxAge: 0,
+  dotfiles: "deny",
+  setHeaders(res) {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+  }
 }));
 
 // Customer catalog shell. It is intentionally not linked from the approved
@@ -160,9 +163,12 @@ app.use("/owner", express.static(path.join(process.cwd(), "admin"), {
 app.use("/catalog", express.static(path.join(process.cwd(), "catalog"), {
   index: "index.html",
   fallthrough: true,
-  etag: true,
-  maxAge: "5m",
-  dotfiles: "deny"
+  etag: false,
+  maxAge: 0,
+  dotfiles: "deny",
+  setHeaders(res) {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+  }
 }));
 
 // Uploaded catalog photos are public only when the backend is eventually
