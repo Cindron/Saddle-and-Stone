@@ -246,3 +246,33 @@ Client review requested that Faith's portrait not appear twice.
 - Replaced the homepage portrait frame with a rustic cottage/vintage interior image so the original mockup-style composition is preserved.
 - Restored the handwritten-style homepage note to "Old things. New stories."
 - No other design, branding, navigation or logo changes were made.
+
+
+## v0.8.0 — isolated backend foundation
+
+Backend development has started without changing or connecting to the approved
+public front end.
+
+Safety boundary:
+- Root `Dockerfile` unchanged.
+- Root `docker-compose.yml` unchanged.
+- Public HTML/CSS/JS unchanged.
+- Existing live deployment command behaves exactly as before.
+- Backend has its own `docker-compose.backend.yml` and binds to localhost only.
+
+Implemented backend foundation:
+- Portable SQLite data model for catalog items, sales, images, owner accounts,
+  sessions and item inquiries.
+- Secure owner authentication foundation with scrypt password hashing, opaque
+  server-side sessions, HttpOnly cookies, SameSite=Strict and CSRF protection.
+- Login and public-inquiry rate limits.
+- Catalog item CRUD API with Available / Pending / Sold / Hidden states.
+- Sale CRUD foundation.
+- Image upload pipeline that validates, resizes, strips metadata and re-encodes
+  uploaded photos to WebP.
+- Item-specific inquiry storage for the future "Ask About This Item" experience.
+- Persistent runtime data under `backend-data/`, separate from containers.
+- Backup command and explicit `HANDOFF.md` migration documentation.
+- No default/admin password is stored in the repository.
+
+Current client-facing website remains exactly as approved.

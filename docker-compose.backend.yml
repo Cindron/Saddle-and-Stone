@@ -1,0 +1,16 @@
+# Isolated backend test stack.
+# This file is deliberately separate from docker-compose.yml so the approved
+# public website is unaffected by backend development/testing.
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: saddle-stone-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend-data:/data
+    ports:
+      - "127.0.0.1:8787:8787"

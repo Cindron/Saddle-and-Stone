@@ -1,0 +1,21 @@
+{
+  "name": "saddle-stone-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "create-admin": "node scripts/create-admin.js",
+    "backup": "node scripts/backup.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "multer": "^2.0.2",
+    "sharp": "^0.34.4"
+  }
+}

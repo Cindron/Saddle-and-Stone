@@ -141,3 +141,7 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Saddle & Stone client runtime data / secrets
+backend-data/
+backend/.env
