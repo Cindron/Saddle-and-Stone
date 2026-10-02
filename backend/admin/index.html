@@ -72,18 +72,26 @@
           </div>
           <label>Condition / notes<input id="itemCondition" maxlength="500" placeholder="Vintage condition, light wear…"></label>
           <label>Description<textarea id="itemDescription" rows="5" maxlength="6000"></textarea></label>
-          <div class="editor-actions"><button type="submit">Save Item</button></div>
 
-          <div id="imageEditor" class="image-editor hidden">
-            <div>
-              <h3>Photos</h3>
-              <p class="muted">JPEG, PNG or WebP. Photos are automatically resized and stripped of metadata.</p>
+          <div id="imageEditor" class="image-editor">
+            <div class="photo-heading">
+              <div>
+                <h3>Photos</h3>
+                <p class="muted">Choose up to 8 photos now. They will upload automatically when you save the item.</p>
+              </div>
+              <span class="photo-count" id="photoCount">0 selected</span>
             </div>
             <div id="itemImages" class="image-grid"></div>
-            <div class="upload-row">
+            <div id="pendingImages" class="image-grid pending-images"></div>
+            <label class="photo-picker">
+              <span>Choose Photos</span>
               <input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp" multiple>
-              <button id="uploadImagesBtn" type="button">Upload Photos</button>
-            </div>
+            </label>
+            <p class="muted photo-help">JPEG, PNG or WebP. Images are resized automatically and metadata is removed.</p>
+          </div>
+
+          <div class="editor-actions">
+            <button id="saveItemBtn" type="submit">Save Item</button>
           </div>
         </form>
 

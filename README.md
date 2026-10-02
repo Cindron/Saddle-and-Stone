@@ -327,3 +327,12 @@ Corrected the automated catalog shell assertion. The v0.9.0 catalog page was
 being served, but the test looked for title-cased text while the actual approved
 eyebrow is uppercase. The test now verifies the page title and catalog grid
 element instead of depending on display-text capitalization.
+
+
+## v0.9.2 — single-step photo workflow
+Improved the private owner portal so photos can be selected during initial item
+creation. Faith now enters the item, chooses photos, previews them, and presses
+Save once. The portal creates the item record first and uploads the photos
+automatically in the same workflow.
+
+The approved public website and customer catalog presentation were not changed.

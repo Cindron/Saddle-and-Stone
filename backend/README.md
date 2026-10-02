@@ -231,3 +231,19 @@ Features:
 
 The customer catalog is served by the backend so it can be reviewed independently
 before any main-site HTML/navigation is changed.
+
+
+## Single-step item photo workflow
+
+Owner item entry now lets Faith choose photos while creating the item.
+
+Workflow:
+1. Enter item details.
+2. Choose up to 8 photos.
+3. Review photo previews immediately.
+4. Press **Save Item** once.
+5. The portal creates/updates the database record and uploads the selected photos automatically.
+
+Existing saved photos remain visible while editing and can still be removed individually.
+The API remains unchanged; the owner portal stages the photos until the item ID exists,
+then uploads them transparently as part of the same Save action.
