@@ -174,3 +174,15 @@ The self-test uses a temporary database and verifies:
 - portable JSON export
 
 It deletes all temporary test data when finished.
+
+
+## Owner preview & settings
+
+The isolated owner portal now includes:
+- Summary counts for Available / Pending / Sold items, published sales and new inquiries.
+- A private shopper-view catalog preview using the live backend data.
+- Portable JSON export from the Settings tab.
+- Owner password change with automatic sign-out of every active session.
+- A visible ownership reminder explaining that data and uploads can move to a client-owned server.
+
+These remain inside the localhost-only backend until the isolated stack is tested.

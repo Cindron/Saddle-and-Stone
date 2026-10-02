@@ -32,10 +32,14 @@
         <button id="logoutBtn" class="ghost">Sign Out</button>
       </header>
 
+      <div id="summaryStrip" class="summary-strip" aria-label="Catalog summary"></div>
+
       <nav class="tabs" aria-label="Owner portal sections">
         <button data-tab="items" class="active">Catalog</button>
         <button data-tab="sales">Sales</button>
         <button data-tab="inquiries">Inquiries</button>
+        <button data-tab="preview">Preview</button>
+        <button data-tab="settings">Settings</button>
       </nav>
 
       <section id="itemsTab" class="tab-panel">
@@ -126,6 +130,50 @@
         </div>
         <div id="inquiriesEmpty" class="empty hidden">No inquiries yet.</div>
         <div id="inquiriesList" class="inquiries"></div>
+      </section>
+
+      <section id="previewTab" class="tab-panel hidden">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">PRIVATE PREVIEW</p>
+            <h2>What shoppers will see</h2>
+            <p class="muted">This preview uses the same catalog data but does not change the public website.</p>
+          </div>
+        </div>
+        <div id="previewEmpty" class="empty hidden">No publicly visible items yet.</div>
+        <div id="previewGrid" class="public-preview-grid"></div>
+      </section>
+
+      <section id="settingsTab" class="tab-panel hidden">
+        <div class="section-head">
+          <div><p class="eyebrow">SETTINGS</p><h2>Ownership &amp; Security</h2></div>
+        </div>
+
+        <div class="settings-grid">
+          <article class="settings-card">
+            <h3>Export Your Data</h3>
+            <p class="muted">Download a portable JSON export of sales, catalog items, image records and inquiries. Passwords and sessions are never included.</p>
+            <a class="button-link" href="/api/admin/export.json" download>Download Data Export</a>
+          </article>
+
+          <article class="settings-card">
+            <h3>Change Owner Password</h3>
+            <p class="muted">Changing the password signs out every active owner session.</p>
+            <form id="passwordForm">
+              <label>Current password<input id="currentPassword" type="password" autocomplete="current-password" minlength="12" required></label>
+              <label>New password<input id="newPassword" type="password" autocomplete="new-password" minlength="12" required></label>
+              <label>Confirm new password<input id="confirmPassword" type="password" autocomplete="new-password" minlength="12" required></label>
+              <button type="submit">Change Password</button>
+              <p id="passwordError" class="error" aria-live="polite"></p>
+            </form>
+          </article>
+
+          <article class="settings-card">
+            <h3>Client Ownership</h3>
+            <p class="muted">The catalog database and uploaded images live outside the application container so the complete site can be moved to Faith’s own domain or VPS without rebuilding her content.</p>
+            <p class="muted">No Cindron account or licensing service is required for the site to operate.</p>
+          </article>
+        </div>
       </section>
 
       <p id="portalMessage" class="toast hidden" aria-live="polite"></p>
