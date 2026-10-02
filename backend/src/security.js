@@ -105,7 +105,7 @@ export function authRequired(req, res, next) {
 
   const row = db.prepare(`
     SELECT s.id AS session_id, s.csrf_token, s.expires_at,
-           a.id AS admin_id, a.email
+           a.id AS admin_id, a.email, a.display_name, a.role
     FROM sessions s
     JOIN admins a ON a.id = s.admin_id
     WHERE s.token_hash = ? AND s.expires_at > CURRENT_TIMESTAMP
@@ -174,4 +174,12 @@ export function rotateAdminPassword(adminId, currentPassword, newPassword) {
     db.exec("ROLLBACK");
     throw error;
   }
+}
+
+
+export function ownerRequired(req, res, next) {
+  if (req.auth?.role !== "owner") {
+    return res.status(403).json({ error: "Owner access required." });
+  }
+  next();
 }

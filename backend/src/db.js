@@ -19,8 +19,14 @@ CREATE TABLE IF NOT EXISTS app_meta (
   value TEXT NOT NULL
 );
 INSERT INTO app_meta(key, value)
-VALUES ('schema_version', '2')
+VALUES ('schema_version', '3')
 ON CONFLICT(key) DO UPDATE SET value = excluded.value;
+
+CREATE TABLE IF NOT EXISTS site_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL DEFAULT '',
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE IF NOT EXISTS admins (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -104,3 +110,35 @@ CREATE INDEX IF NOT EXISTS idx_inquiries_status ON inquiries(status, created_at)
 export function cleanupExpiredSessions() {
   db.prepare("DELETE FROM sessions WHERE expires_at <= CURRENT_TIMESTAMP").run();
 }
+
+
+/* Migration: admin display name/role + seeded portable site settings. */
+const adminColumns = new Set(db.prepare("PRAGMA table_info(admins)").all().map(row => row.name));
+if (!adminColumns.has("display_name")) {
+  db.exec("ALTER TABLE admins ADD COLUMN display_name TEXT NOT NULL DEFAULT ''");
+}
+if (!adminColumns.has("role")) {
+  db.exec("ALTER TABLE admins ADD COLUMN role TEXT NOT NULL DEFAULT 'admin'");
+}
+
+const ownerCount = Number(db.prepare("SELECT COUNT(*) AS count FROM admins WHERE role = 'owner'").get().count);
+if (ownerCount === 0) {
+  const firstAdmin = db.prepare("SELECT id FROM admins ORDER BY id ASC LIMIT 1").get();
+  if (firstAdmin) db.prepare("UPDATE admins SET role = 'owner' WHERE id = ?").run(firstAdmin.id);
+}
+
+const defaultSettings = {
+  business_name: "Saddle & Stone Estate Sales",
+  tagline: "Old things. New stories.",
+  phone: "705-881-3728",
+  email: "saddle.and.stone.estate@gmail.com",
+  service_area: "Uxbridge · Peterborough · Kawartha Lakes & surrounding areas",
+  instagram: "https://www.instagram.com/saddle.and.stone.estate/",
+  facebook: "https://www.facebook.com/share/1FGwEM1T6W/?mibextid=wwXIfr"
+};
+const upsertSetting = db.prepare(`
+  INSERT INTO site_settings(key, value, updated_at)
+  VALUES (?, ?, CURRENT_TIMESTAMP)
+  ON CONFLICT(key) DO NOTHING
+`);
+for (const [key, value] of Object.entries(defaultSettings)) upsertSetting.run(key, value);
