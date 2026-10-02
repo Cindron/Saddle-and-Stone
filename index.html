@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=7.0.1">
+  <link rel="stylesheet" href="styles.css?v=7.1.0">
 </head>
 <body data-page="home">
 <a class="skip-link" href="#main-content">Skip to content</a>
@@ -26,7 +26,8 @@
     <a data-nav="home" href="index.html">Home</a>
     <a data-nav="about" href="about.html">About</a>
     <a data-nav="services" href="services.html">Services</a>
-    <a data-nav="sales" href="sales.html">Upcoming Sales</a>
+    <a href="/catalog/">Catalog</a>
+    <a data-nav="sales" href="/calendar/">Sales Calendar</a>
     <a data-nav="contact" href="contact.html">Contact</a>
   </nav>
 </header>
@@ -39,7 +40,7 @@
       <div class="rule"></div>
       <p class="lead">Thoughtful estate sales with a cozy cottage spirit — organized with care, styled with warmth and built around the stories that make a home special.</p>
       <div class="actions">
-        <a class="btn btn-rust" href="sales.html">View Upcoming Sales <span>→</span></a>
+        <a class="btn btn-rust" href="/calendar/">View Upcoming Sales <span>→</span></a>
         <a class="text-link" href="contact.html">Plan an Estate Sale</a>
       </div>
       <p class="service-area">Uxbridge · Peterborough · Kawartha Lakes &amp; surrounding areas</p>
@@ -94,7 +95,7 @@
       <p class="eyebrow light">SADDLE &amp; STONE</p>
       <h2>Good Old Things.<br><em>Find New Homes.</em></h2>
       <p>Vintage character, farmhouse warmth and carefully presented pieces — ready for their next chapter.</p>
-      <a href="sales.html">Browse Upcoming Sales <span>→</span></a>
+      <a href="/calendar/">Browse Upcoming Sales <span>→</span></a>
     </div>
     <div class="story-photo story-b"></div>
   </section>
@@ -102,21 +103,18 @@
   <section class="home-sales section-pad">
     <div class="split-heading">
       <div><p class="eyebrow">COMING UP</p><h2>Upcoming Sales</h2></div>
-      <p>New sale dates, featured estates and selected finds will be posted here as they’re confirmed.</p>
+      <p>Faith will publish confirmed estate-sale dates as they’re ready. Until then, there are no placeholder events shown.</p>
     </div>
-    <div class="sale-preview-grid">
-      <a class="sale-preview-card" href="sales.html">
-        <img loading="lazy" decoding="async" src="https://images.pexels.com/photos/29239249/pexels-photo-29239249.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Warm rustic log cabin dining room">
-        <div><small>COMING SOON</small><strong>Country Home Estate Sale</strong><span>→</span></div>
-      </a>
-      <a class="sale-preview-card" href="sales.html">
-        <img loading="lazy" decoding="async" src="https://images.pexels.com/photos/9130979/pexels-photo-9130979.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Cozy country cabin bedroom">
-        <div><small>COMING SOON</small><strong>Vintage Treasures Sale</strong><span>→</span></div>
-      </a>
-      <a class="sale-preview-card" href="sales.html">
-        <img loading="lazy" decoding="async" src="https://images.pexels.com/photos/30413719/pexels-photo-30413719.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Warm rustic cabin bedroom">
-        <div><small>COMING SOON</small><strong>The Cottage Collection</strong><span>→</span></div>
-      </a>
+    <div class="home-sales-empty">
+      <div>
+        <p class="eyebrow">LIVE SCHEDULE</p>
+        <h3>See confirmed sale dates.</h3>
+        <p>The calendar only displays sales Faith has actually published from her Owner Portal.</p>
+      </div>
+      <div class="home-sales-empty-actions">
+        <a class="btn btn-rust" href="/calendar/">Open Sales Calendar <span>→</span></a>
+        <a class="btn btn-outline" href="/catalog/">Browse Catalog <span>→</span></a>
+      </div>
     </div>
   </section>
 
@@ -161,10 +159,11 @@
   <div class="footer-links">
     <a href="about.html">About</a>
     <a href="services.html">Services</a>
-    <a href="sales.html">Sales</a>
+    <a href="/catalog/">Catalog</a>
+    <a href="/calendar/">Sales</a>
     <a href="contact.html">Contact</a>
   </div>
   <small class="footer-legal">© 2026 Saddle &amp; Stone Estate Sales</small>
 </footer>
-<script src="script.js?v=7.0.0"></script>
+<script src="script.js?v=7.1.0"></script>
 </body></html>

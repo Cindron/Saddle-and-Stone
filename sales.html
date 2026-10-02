@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=7.0.0">
+  <link rel="stylesheet" href="styles.css?v=7.1.0">
 </head>
 <body data-page="sales">
 <a class="skip-link" href="#main-content">Skip to content</a>
@@ -26,7 +26,8 @@
     <a data-nav="home" href="index.html">Home</a>
     <a data-nav="about" href="about.html">About</a>
     <a data-nav="services" href="services.html">Services</a>
-    <a data-nav="sales" href="sales.html">Upcoming Sales</a>
+    <a href="/catalog/">Catalog</a>
+    <a data-nav="sales" href="/calendar/">Sales Calendar</a>
     <a data-nav="contact" href="contact.html">Contact</a>
   </nav>
 </header>
@@ -39,52 +40,33 @@
     </div>
   </section>
 
-  <section class="sales-layout section-pad">
-    <aside class="calendar-card">
-      <div class="calendar-top">
-        <p class="eyebrow">SALE CALENDAR</p>
-        <h2>October 2026</h2>
-      </div>
-      <div class="calendar-grid">
-        <span class="dow">S</span><span class="dow">M</span><span class="dow">T</span><span class="dow">W</span><span class="dow">T</span><span class="dow">F</span><span class="dow">S</span>
-        <span class="muted-day">27</span><span class="muted-day">28</span><span class="muted-day">29</span><span class="muted-day">30</span>
-        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
-        <span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span>
-        <span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span>
-        <span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span><span>31</span>
-      </div>
-      <p class="calendar-note">Confirmed sale dates will appear here as they are announced.</p>
-    </aside>
-
-    <div class="sales-content">
-      <div class="split-heading compact">
-        <div><p class="eyebrow">CURRENTLY PLANNED</p><h2>Upcoming estates</h2></div>
-        <p>Details for upcoming estate sales will be added as dates, locations and featured pieces are confirmed.</p>
-      </div>
-      <div class="estate-grid">
-        <article class="estate-card">
-          <img loading="lazy" decoding="async" src="https://images.pexels.com/photos/29239249/pexels-photo-29239249.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Country home estate">
-          <div class="estate-card-body"><small>COMING SOON</small><h3>Country Home Estate Sale</h3><p>Warm furnishings, household pieces and country-inspired decor.</p><span>Details to come</span></div>
-        </article>
-        <article class="estate-card">
-          <img loading="lazy" decoding="async" src="https://images.pexels.com/photos/9130979/pexels-photo-9130979.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Vintage estate">
-          <div class="estate-card-body"><small>COMING SOON</small><h3>Vintage Treasures Sale</h3><p>Furniture, decor, collectibles and one-of-a-kind finds.</p><span>Details to come</span></div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="catalog-section section-pad">
+  <section class="sales-live section-pad">
     <div class="section-heading centered">
-      <p class="eyebrow">FEATURED ITEMS</p>
-      <h2>Catalog preview.</h2>
-      <p class="heading-copy">Selected pieces from upcoming sales will be featured here so shoppers can browse highlights before visiting.</p>
+      <p class="eyebrow">LIVE SALES &amp; CATALOG</p>
+      <h2>Only real listings, when they’re ready.</h2>
+      <p class="heading-copy">Faith publishes estate-sale dates and catalog pieces directly from the Saddle &amp; Stone Owner Portal. Placeholder sales and sample inventory are not shown here.</p>
     </div>
-    <div class="catalog-grid">
-      <article><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/5490199/pexels-photo-5490199.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Vintage chair"><div><small>FURNITURE</small><h3>Vintage Accent Chair</h3><p>Preview item</p></div></article>
-      <article><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/4917121/pexels-photo-4917121.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Vintage decor"><div><small>DECOR</small><h3>Collected Home Decor</h3><p>Preview item</p></div></article>
-      <article><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/9056659/pexels-photo-9056659.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Wood cabinet"><div><small>FURNITURE</small><h3>Wood Storage Piece</h3><p>Preview item</p></div></article>
-      <article><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/4846384/pexels-photo-4846384.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Farmhouse table"><div><small>FARMHOUSE</small><h3>Tabletop &amp; Kitchen Finds</h3><p>Preview item</p></div></article>
+
+    <div class="live-sales-links">
+      <a class="live-sales-card" href="/calendar/">
+        <span class="live-sales-icon">◷</span>
+        <div>
+          <p class="eyebrow">SALE CALENDAR</p>
+          <h3>Upcoming Estate Sales</h3>
+          <p>View confirmed sale dates, locations and multi-day events as Faith publishes them.</p>
+          <strong>Open Calendar →</strong>
+        </div>
+      </a>
+
+      <a class="live-sales-card" href="/catalog/">
+        <span class="live-sales-icon">✦</span>
+        <div>
+          <p class="eyebrow">CATALOG</p>
+          <h3>Browse Available Finds</h3>
+          <p>Shop estate-sale items and standalone pieces that are not tied to a scheduled estate sale.</p>
+          <strong>Open Catalog →</strong>
+        </div>
+      </a>
     </div>
   </section>
 
@@ -106,10 +88,11 @@
   <div class="footer-links">
     <a href="about.html">About</a>
     <a href="services.html">Services</a>
-    <a href="sales.html">Sales</a>
+    <a href="/catalog/">Catalog</a>
+    <a href="/calendar/">Sales</a>
     <a href="contact.html">Contact</a>
   </div>
   <small class="footer-legal">© 2026 Saddle &amp; Stone Estate Sales</small>
 </footer>
-<script src="script.js?v=7.0.0"></script>
+<script src="script.js?v=7.1.0"></script>
 </body></html>

@@ -1770,3 +1770,94 @@ h1,h2,h3{color:var(--ink)}
 @media(max-width:800px){
   .home-rustic-photo{max-width:420px}
 }
+
+
+/* v0.11.0 — live catalog/calendar integration, no fictional sale cards */
+.home-sales-empty{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:34px;
+  padding:30px 34px;
+  border:1px solid #d3bda0;
+  background:
+    linear-gradient(rgba(251,244,233,.95),rgba(251,244,233,.95)),
+    repeating-linear-gradient(90deg,rgba(101,72,47,.025) 0 1px,transparent 1px 7px);
+  box-shadow:0 10px 26px rgba(55,37,24,.07);
+}
+.home-sales-empty h3{
+  margin:3px 0 8px;
+  font:600 32px/1 var(--serif);
+}
+.home-sales-empty p:last-child{
+  margin:0;
+  color:#6d5d50;
+  font-family:var(--serif);
+  font-size:17px;
+}
+.home-sales-empty-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.sales-live{
+  background:
+    linear-gradient(rgba(250,246,238,.96),rgba(250,246,238,.96)),
+    repeating-linear-gradient(0deg,rgba(104,74,47,.026) 0 1px,transparent 1px 5px);
+}
+.live-sales-links{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+  max-width:1080px;
+  margin:35px auto 0;
+}
+.live-sales-card{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:20px;
+  padding:28px;
+  border:1px solid #d3bda0;
+  background:#fbf4e9;
+  box-shadow:0 10px 25px rgba(56,38,24,.08);
+  text-decoration:none;
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.live-sales-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 15px 30px rgba(56,38,24,.12);
+}
+.live-sales-icon{
+  display:grid;
+  place-items:center;
+  width:54px;
+  height:54px;
+  border:1px solid #b88a5d;
+  border-radius:50%;
+  color:var(--rust);
+  font:500 24px var(--serif);
+}
+.live-sales-card h3{
+  margin:3px 0 8px;
+  font:600 30px/1 var(--serif);
+}
+.live-sales-card p:not(.eyebrow){
+  color:#6b5a4e;
+  font:500 17px/1.4 var(--serif);
+}
+.live-sales-card strong{
+  color:var(--rust);
+  font-size:10px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+@media(max-width:900px){
+  .home-sales-empty{grid-template-columns:1fr}
+  .home-sales-empty-actions{justify-content:flex-start}
+}
+@media(max-width:700px){
+  .live-sales-links{grid-template-columns:1fr}
+  .live-sales-card{padding:22px}
+}
