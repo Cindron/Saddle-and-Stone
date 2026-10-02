@@ -16,7 +16,9 @@ import {
   authRequired,
   csrfRequired,
   originGuard,
-  rotateAdminPassword
+  rotateAdminPassword,
+  ownerRequired,
+  hashPassword
 } from "./security.js";
 import {
   text,
@@ -186,7 +188,7 @@ app.post("/api/auth/login", loginLimiter, (req, res) => {
   const password = String(req.body?.password || "");
 
   const admin = db.prepare(`
-    SELECT id, email, password_salt, password_hash
+    SELECT id, email, password_salt, password_hash, display_name, role
     FROM admins
     WHERE email = ?
   `).get(email);
@@ -198,7 +200,7 @@ app.post("/api/auth/login", loginLimiter, (req, res) => {
   const session = createSession(admin.id, res);
   res.json({
     ok: true,
-    admin: { id: admin.id, email: admin.email },
+    admin: { id: admin.id, email: admin.email, display_name: admin.display_name || "", role: admin.role || "admin" },
     csrf_token: session.csrfToken,
     expires_at: session.expiresAt
   });
@@ -206,7 +208,7 @@ app.post("/api/auth/login", loginLimiter, (req, res) => {
 
 app.get("/api/auth/me", authRequired, (req, res) => {
   res.json({
-    admin: { id: req.auth.admin_id, email: req.auth.email },
+    admin: { id: req.auth.admin_id, email: req.auth.email, display_name: req.auth.display_name || "", role: req.auth.role || "admin" },
     csrf_token: req.auth.csrf_token,
     expires_at: req.auth.expires_at
   });
@@ -358,6 +360,110 @@ app.post("/api/catalog/:slug/inquiries", inquiryLimiter, asyncRoute(async (req, 
 
 // Everything below here is owner-only.
 app.use("/api/admin", authRequired);
+
+app.get("/api/admin/site-settings", (_req, res) => {
+  const rows = db.prepare("SELECT key, value, updated_at FROM site_settings ORDER BY key").all();
+  res.json({
+    settings: Object.fromEntries(rows.map(row => [row.key, row.value])),
+    rows
+  });
+});
+
+app.put("/api/admin/site-settings", csrfRequired, (req, res) => {
+  const allowed = new Set(["business_name","tagline","phone","email","service_area","instagram","facebook"]);
+  const entries = Object.entries(req.body || {}).filter(([key]) => allowed.has(key));
+  if (!entries.length) return res.status(400).json({ error: "No valid settings supplied." });
+
+  const upsert = db.prepare(`
+    INSERT INTO site_settings(key, value, updated_at)
+    VALUES (?, ?, CURRENT_TIMESTAMP)
+    ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP
+  `);
+
+  db.exec("BEGIN IMMEDIATE");
+  try {
+    for (const [key, value] of entries) {
+      upsert.run(key, text(value, key === "service_area" ? 300 : 500));
+    }
+    db.exec("COMMIT");
+  } catch (error) {
+    db.exec("ROLLBACK");
+    throw error;
+  }
+
+  const rows = db.prepare("SELECT key, value FROM site_settings ORDER BY key").all();
+  res.json({ settings: Object.fromEntries(rows.map(row => [row.key, row.value])) });
+});
+
+app.get("/api/admin/system", (_req, res) => {
+  let databaseBytes = 0;
+  let uploadCount = 0;
+  let backupCount = 0;
+  try { databaseBytes = fs.statSync(config.dbPath).size; } catch {}
+  try { uploadCount = fs.readdirSync(config.uploadDir).filter(name => !name.startsWith(".")).length; } catch {}
+  try { backupCount = fs.readdirSync(config.backupDir).filter(name => name.startsWith("saddle-stone-")).length; } catch {}
+
+  res.json({
+    ok: true,
+    schema_version: db.prepare("SELECT value FROM app_meta WHERE key = 'schema_version'").get()?.value || "unknown",
+    database_bytes: databaseBytes,
+    upload_count: uploadCount,
+    backup_count: backupCount
+  });
+});
+
+app.get("/api/admin/users", ownerRequired, (_req, res) => {
+  const users = db.prepare(`
+    SELECT id, email, display_name, role, created_at, updated_at
+    FROM admins
+    ORDER BY CASE role WHEN 'owner' THEN 0 ELSE 1 END, email
+  `).all();
+  res.json({ users });
+});
+
+app.post("/api/admin/users", ownerRequired, csrfRequired, (req, res) => {
+  try {
+    const email = normalizeEmail(req.body?.email);
+    const displayName = text(req.body?.display_name, 120);
+    const password = String(req.body?.password || "");
+    if (!email || !email.includes("@")) return res.status(400).json({ error: "Valid email is required." });
+    if (password.length < 12) return res.status(400).json({ error: "Temporary password must be at least 12 characters." });
+    if (db.prepare("SELECT id FROM admins WHERE email = ?").get(email)) {
+      return res.status(409).json({ error: "An administrator with that email already exists." });
+    }
+
+    const { salt, hash } = hashPassword(password);
+    const result = db.prepare(`
+      INSERT INTO admins(email, password_salt, password_hash, display_name, role)
+      VALUES (?, ?, ?, ?, 'admin')
+    `).run(email, salt, hash, displayName);
+
+    const user = db.prepare(`
+      SELECT id, email, display_name, role, created_at, updated_at
+      FROM admins WHERE id = ?
+    `).get(Number(result.lastInsertRowid));
+
+    res.status(201).json({ user });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.delete("/api/admin/users/:id", ownerRequired, csrfRequired, (req, res) => {
+  try {
+    const id = requirePositiveId(req.params.id);
+    if (id === req.auth.admin_id) return res.status(400).json({ error: "You cannot remove your own owner account." });
+
+    const target = db.prepare("SELECT id, role FROM admins WHERE id = ?").get(id);
+    if (!target) return res.status(404).json({ error: "Administrator not found." });
+    if (target.role === "owner") return res.status(400).json({ error: "The owner account cannot be removed here." });
+
+    db.prepare("DELETE FROM admins WHERE id = ?").run(id);
+    res.json({ ok: true });
+  } catch (error) {
+    res.status(error.status || 400).json({ error: error.message });
+  }
+});
 
 app.get("/api/admin/summary", (_req, res) => {
   const stats = {
