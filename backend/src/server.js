@@ -133,6 +133,16 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true, service: "saddle-stone-backend" });
 });
 
+// Private owner portal UI. The API remains the security boundary; this static
+// shell contains no credentials and exposes no data unless authentication succeeds.
+app.use("/owner", express.static(path.join(process.cwd(), "admin"), {
+  index: "index.html",
+  fallthrough: true,
+  etag: true,
+  maxAge: "5m",
+  dotfiles: "deny"
+}));
+
 // Uploaded catalog photos are public only when the backend is eventually
 // reverse-proxied. Current compose binds the service to 127.0.0.1 only.
 app.use("/uploads", express.static(config.uploadDir, {

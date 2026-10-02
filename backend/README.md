@@ -26,7 +26,7 @@ That command does not build, start, proxy or expose this backend.
   - image metadata is stripped
   - maximum dimensions are reduced to 2200px
 - Public catalog/inquiry API exists but is not wired into the visible site
-- Owner API exists but no owner UI is exposed yet
+- Owner portal UI exists at `/owner/` but is reachable only through the isolated localhost backend until we intentionally proxy it
 
 ## Data locations
 
@@ -127,3 +127,18 @@ current VPS. A future handoff consists of:
 6. Point the client's DNS at the new server.
 
 No catalog records or uploaded images need to be recreated.
+
+
+## Owner portal UI
+
+A functional private owner portal now lives inside the isolated backend at
+`/owner/`.
+
+It supports sign-in/sign-out, catalog item creation/editing/hiding, item
+statuses, pricing, categories, descriptions, condition notes, featured items,
+sale assignment, multi-photo upload/removal, estate sale creation/editing and
+inquiry review/status changes.
+
+The owner UI is not linked from the public website and the backend remains bound
+to `127.0.0.1:8787`. Nothing becomes public until reverse-proxy routes are
+deliberately added after testing.

@@ -276,3 +276,10 @@ Implemented backend foundation:
 - No default/admin password is stored in the repository.
 
 Current client-facing website remains exactly as approved.
+
+
+### Owner portal UI foundation
+The isolated backend now also contains a functional owner portal at `/owner/`
+for catalog items, photos, estate sales and inquiries. It is **not exposed or
+linked from the approved public website**. The production web container and
+normal deployment command remain unchanged.

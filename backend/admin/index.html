@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Saddle & Stone Owner Portal</title>
+  <link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+  <main class="shell">
+    <section id="loginView" class="login-card">
+      <div class="brand-mark">S&amp;S</div>
+      <p class="eyebrow">SADDLE &amp; STONE</p>
+      <h1>Owner Portal</h1>
+      <p class="lede">Private catalog, sale and inquiry management.</p>
+      <form id="loginForm" autocomplete="on">
+        <label>Email<input id="loginEmail" name="email" type="email" autocomplete="username" required></label>
+        <label>Password<input id="loginPassword" name="password" type="password" autocomplete="current-password" minlength="12" required></label>
+        <button type="submit">Sign In</button>
+        <p id="loginError" class="error" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="portalView" class="portal hidden">
+      <header class="portal-head">
+        <div>
+          <p class="eyebrow">SADDLE &amp; STONE</p>
+          <h1>Owner Portal</h1>
+          <p id="signedInAs" class="muted"></p>
+        </div>
+        <button id="logoutBtn" class="ghost">Sign Out</button>
+      </header>
+
+      <nav class="tabs" aria-label="Owner portal sections">
+        <button data-tab="items" class="active">Catalog</button>
+        <button data-tab="sales">Sales</button>
+        <button data-tab="inquiries">Inquiries</button>
+      </nav>
+
+      <section id="itemsTab" class="tab-panel">
+        <div class="section-head">
+          <div><p class="eyebrow">CATALOG</p><h2>Items for Sale</h2></div>
+          <button id="newItemBtn">+ Add Item</button>
+        </div>
+
+        <form id="itemForm" class="editor hidden">
+          <input id="itemId" type="hidden">
+          <div class="editor-head"><h3 id="itemFormTitle">Add Item</h3><button id="cancelItemBtn" type="button" class="ghost">Cancel</button></div>
+          <div class="grid two">
+            <label>Title<input id="itemTitle" required maxlength="140"></label>
+            <label>Category<input id="itemCategory" maxlength="80" placeholder="Furniture, decor, collectibles…"></label>
+            <label>Price
+              <div class="money"><span>$</span><input id="itemPrice" type="number" min="0" step="0.01" placeholder="Optional"></div>
+            </label>
+            <label>Status
+              <select id="itemStatus">
+                <option value="available">Available</option>
+                <option value="pending">Pending</option>
+                <option value="sold">Sold</option>
+                <option value="hidden">Hidden</option>
+              </select>
+            </label>
+            <label>Sale
+              <select id="itemSale"><option value="">No linked sale</option></select>
+            </label>
+            <label class="check"><input id="itemFeatured" type="checkbox"> Feature this item</label>
+          </div>
+          <label>Condition / notes<input id="itemCondition" maxlength="500" placeholder="Vintage condition, light wear…"></label>
+          <label>Description<textarea id="itemDescription" rows="5" maxlength="6000"></textarea></label>
+          <div class="editor-actions"><button type="submit">Save Item</button></div>
+
+          <div id="imageEditor" class="image-editor hidden">
+            <div>
+              <h3>Photos</h3>
+              <p class="muted">JPEG, PNG or WebP. Photos are automatically resized and stripped of metadata.</p>
+            </div>
+            <div id="itemImages" class="image-grid"></div>
+            <div class="upload-row">
+              <input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp" multiple>
+              <button id="uploadImagesBtn" type="button">Upload Photos</button>
+            </div>
+          </div>
+        </form>
+
+        <div id="itemsEmpty" class="empty hidden">No catalog items yet.</div>
+        <div id="itemsList" class="cards"></div>
+      </section>
+
+      <section id="salesTab" class="tab-panel hidden">
+        <div class="section-head">
+          <div><p class="eyebrow">SALES</p><h2>Estate Sales</h2></div>
+          <button id="newSaleBtn">+ Add Sale</button>
+        </div>
+
+        <form id="saleForm" class="editor hidden">
+          <input id="saleId" type="hidden">
+          <div class="editor-head"><h3 id="saleFormTitle">Add Sale</h3><button id="cancelSaleBtn" type="button" class="ghost">Cancel</button></div>
+          <div class="grid two">
+            <label>Title<input id="saleTitle" required maxlength="160"></label>
+            <label>Status
+              <select id="saleStatus">
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+                <option value="archived">Archived</option>
+              </select>
+            </label>
+            <label>Start<input id="saleStart" type="datetime-local"></label>
+            <label>End<input id="saleEnd" type="datetime-local"></label>
+            <label>City<input id="saleCity" maxlength="120"></label>
+            <label>Region<input id="saleRegion" maxlength="120"></label>
+          </div>
+          <label>Public address / location note<input id="saleAddress" maxlength="300" placeholder="Optional — publish only when appropriate"></label>
+          <label>Summary<textarea id="saleSummary" rows="5" maxlength="6000"></textarea></label>
+          <div class="editor-actions"><button type="submit">Save Sale</button></div>
+        </form>
+
+        <div id="salesEmpty" class="empty hidden">No estate sales yet.</div>
+        <div id="salesList" class="cards"></div>
+      </section>
+
+      <section id="inquiriesTab" class="tab-panel hidden">
+        <div class="section-head">
+          <div><p class="eyebrow">INQUIRIES</p><h2>Item Questions</h2></div>
+          <button id="refreshInquiriesBtn" class="ghost">Refresh</button>
+        </div>
+        <div id="inquiriesEmpty" class="empty hidden">No inquiries yet.</div>
+        <div id="inquiriesList" class="inquiries"></div>
+      </section>
+
+      <p id="portalMessage" class="toast hidden" aria-live="polite"></p>
+    </section>
+  </main>
+  <script src="./admin.js" defer></script>
+</body>
+</html>
