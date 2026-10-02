@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#3b4635">
+  <title>Upcoming Sales Calendar | Saddle & Stone Estate Sales</title>
+  <meta name="description" content="Upcoming estate sales from Saddle & Stone Estate Sales.">
+  <link rel="stylesheet" href="./calendar.css?v=1.0.0">
+</head>
+<body>
+  <header class="site-head">
+    <a href="/" class="brand"><img src="/assets/saddle-stone-logo-v10.png?rev=20260930a" alt="Saddle & Stone Estate Sales"></a>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/catalog/">Catalog</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">UPCOMING ESTATE SALES</p>
+        <h1>Mark the calendar.</h1>
+        <p>Published sale dates and locations from Saddle &amp; Stone. New dates appear here as Faith confirms them.</p>
+      </div>
+    </section>
+
+    <section class="calendar-shell">
+      <div class="calendar-top">
+        <div>
+          <p class="eyebrow">SALE CALENDAR</p>
+          <h2 id="monthTitle"></h2>
+        </div>
+        <div class="actions">
+          <button id="prevMonth" type="button">←</button>
+          <button id="todayMonth" type="button">Today</button>
+          <button id="nextMonth" type="button">→</button>
+        </div>
+      </div>
+
+      <div class="weekdays" aria-hidden="true">
+        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+      </div>
+      <div id="calendarGrid" class="calendar-grid"></div>
+
+      <div class="upcoming-wrap">
+        <div>
+          <p class="eyebrow">NEXT UP</p>
+          <h2>Upcoming Sales</h2>
+        </div>
+        <div id="salesList" class="sales-list"></div>
+        <div id="emptyState" class="empty hidden">
+          <h3>No published sales yet.</h3>
+          <p>Check back soon — new estate sale dates will appear here as they’re confirmed.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div><img src="/assets/saddle-stone-logo-v10.png?rev=20260930a" alt="Saddle & Stone Estate Sales"></div>
+    <p>Uxbridge · Peterborough · Kawartha Lakes &amp; surrounding areas</p>
+  </footer>
+
+  <script src="./calendar.js?v=1.0.0" defer></script>
+</body>
+</html>

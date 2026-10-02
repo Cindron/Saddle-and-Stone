@@ -173,6 +173,17 @@ app.use("/catalog", express.static(path.join(process.cwd(), "catalog"), {
   }
 }));
 
+app.use("/calendar", express.static(path.join(process.cwd(), "calendar"), {
+  index: "index.html",
+  fallthrough: true,
+  etag: false,
+  maxAge: 0,
+  dotfiles: "deny",
+  setHeaders(res) {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+  }
+}));
+
 // Uploaded catalog photos are public only when the backend is eventually
 // reverse-proxied. Current compose binds the service to 127.0.0.1 only.
 app.use("/uploads", express.static(config.uploadDir, {

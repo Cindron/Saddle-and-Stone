@@ -9,6 +9,7 @@ COPY src ./src
 COPY scripts ./scripts
 COPY admin ./admin
 COPY catalog ./catalog
+COPY calendar ./calendar
 
 RUN mkdir -p /data/uploads /data/backups && chown -R node:node /app /data
 
