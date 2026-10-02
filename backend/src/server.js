@@ -423,6 +423,53 @@ app.get("/api/admin/system", (_req, res) => {
   });
 });
 
+app.get("/api/admin/backups", (_req, res) => {
+  let backups = [];
+  try {
+    backups = fs.readdirSync(config.backupDir, { withFileTypes: true })
+      .filter(entry => entry.isDirectory() && entry.name.startsWith("saddle-stone-"))
+      .map(entry => {
+        const full = path.join(config.backupDir, entry.name);
+        let created_at = "";
+        try { created_at = fs.statSync(full).mtime.toISOString(); } catch {}
+        return { name: entry.name, created_at };
+      })
+      .sort((a,b) => b.created_at.localeCompare(a.created_at));
+  } catch {}
+  res.json({ backups });
+});
+
+app.post("/api/admin/backups", csrfRequired, (req, res) => {
+  try {
+    fs.mkdirSync(config.backupDir, { recursive: true });
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const name = `saddle-stone-${stamp}`;
+    const targetDir = path.join(config.backupDir, name);
+    const targetUploads = path.join(targetDir, "uploads");
+    fs.mkdirSync(targetUploads, { recursive: true });
+
+    const targetDb = path.join(targetDir, "saddle-stone.sqlite");
+    const safeDb = targetDb.replaceAll("'", "''");
+    db.exec(`VACUUM INTO '${safeDb}'`);
+
+    if (fs.existsSync(config.uploadDir)) {
+      fs.cpSync(config.uploadDir, targetUploads, { recursive: true });
+    }
+
+    fs.writeFileSync(path.join(targetDir, "manifest.json"), JSON.stringify({
+      created_at: new Date().toISOString(),
+      database: "saddle-stone.sqlite",
+      uploads: "uploads/",
+      note: "Secrets are intentionally excluded."
+    }, null, 2) + "\n");
+
+    res.status(201).json({ ok: true, backup: { name } });
+  } catch (error) {
+    console.error("Backup creation failed:", error);
+    res.status(500).json({ error: "Backup creation failed." });
+  }
+});
+
 app.get("/api/admin/users", ownerRequired, (_req, res) => {
   const users = db.prepare(`
     SELECT id, email, display_name, role, created_at, updated_at

@@ -57,7 +57,7 @@ function openSale(id=null){const s=id?state.sales.find(x=>x.id===id):null;$("sal
 $("saleForm").addEventListener("submit",async e=>{e.preventDefault();const id=$("saleId").value,body={title:$("saleTitle").value,status:$("saleStatus").value,start_at:$("saleStart").value||null,end_at:$("saleEnd").value||null,city:$("saleCity").value,region:$("saleRegion").value,address_public:$("saleAddress").value,summary:$("saleSummary").value};try{await api(id?"/api/admin/sales/"+id:"/api/admin/sales",{method:id?"PUT":"POST",body:JSON.stringify(body)});$("saleForm").classList.add("hidden");await loadSales();flash("Sale saved.")}catch(err){flash(err.message)}});
 async function loadMaintenance(){
   try{
-    const [settingsData,systemData]=await Promise.all([api("/api/admin/site-settings"),api("/api/admin/system")]);
+    const [settingsData,systemData,backupData]=await Promise.all([api("/api/admin/site-settings"),api("/api/admin/system"),api("/api/admin/backups")]);
     state.settings=settingsData.settings||{};state.system=systemData;
     $("settingBusinessName").value=state.settings.business_name||"";
     $("settingTagline").value=state.settings.tagline||"";
@@ -69,8 +69,20 @@ async function loadMaintenance(){
     const mb=((Number(state.system.database_bytes)||0)/1048576).toFixed(2);
     $("systemStatus").innerHTML=[["Backend","Healthy"],["Schema","v"+esc(state.system.schema_version||"—")],["Database",mb+" MB"],["Uploaded photos",String(state.system.upload_count||0)],["Server backups",String(state.system.backup_count||0)]].map(([label,value])=>'<div class="system-line"><span>'+label+'</span><strong>'+value+'</strong></div>').join("");
     $("adminAccessCard").classList.toggle("hidden",state.admin?.role!=="owner");
+    renderBackups(backupData.backups||[]);
+    if(state.admin?.role==="owner")await loadMaintenanceAccess();
   }catch(err){flash(err.message)}
 }
+function renderBackups(backups){
+  $("backupList").innerHTML=backups.length?backups.slice(0,5).map(b=>'<div class="backup-row"><strong>'+esc(b.name)+'</strong><span>'+esc(b.created_at?new Date(b.created_at).toLocaleString():"")+'</span></div>').join(""):'<p class="muted">No server backups created from the portal yet.</p>';
+}
+async function loadMaintenanceAccess(){
+  const data=await api("/api/admin/users");
+  const users=data.users||[];
+  $("adminUsersList").innerHTML=users.map(u=>'<div class="admin-user"><div class="admin-user-main"><strong>'+esc(u.display_name||u.email)+'<span class="role-badge">'+esc(u.role)+'</span></strong><small>'+esc(u.email)+'</small></div></div>').join("");
+}
+$("createBackupBtn").addEventListener("click",async()=>{const btn=$("createBackupBtn");btn.disabled=true;btn.textContent="Creating…";try{await api("/api/admin/backups",{method:"POST"});await loadMaintenance();flash("Backup created.")}catch(err){flash(err.message)}finally{btn.disabled=false;btn.textContent="Create Backup Now"}});
+
 $("siteSettingsForm").addEventListener("submit",async e=>{e.preventDefault();try{const body={business_name:$("settingBusinessName").value,tagline:$("settingTagline").value,phone:$("settingPhone").value,email:$("settingEmail").value,service_area:$("settingServiceArea").value,instagram:$("settingInstagram").value,facebook:$("settingFacebook").value};const data=await api("/api/admin/site-settings",{method:"PUT",body:JSON.stringify(body)});state.settings=data.settings||body;flash("Site details saved.")}catch(err){flash(err.message)}});
 $("refreshMaintenanceBtn").addEventListener("click",loadMaintenance);
 

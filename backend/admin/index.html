@@ -213,9 +213,13 @@
           </article>
 
           <article class="settings-card">
-            <h3>Export Your Data</h3>
-            <p class="muted">Download sales, catalog records, image records and inquiries. Passwords and sessions are never included.</p>
-            <a class="button-link" href="/api/admin/export.json" download>Download Data Export</a>
+            <h3>Backups &amp; Export</h3>
+            <p class="muted">Create a server backup of the database and uploads, or download a portable data export. Passwords and sessions are never included in exports.</p>
+            <div class="maintenance-actions">
+              <button id="createBackupBtn" type="button">Create Backup Now</button>
+              <a class="button-link" href="/api/admin/export.json" download>Download Data Export</a>
+            </div>
+            <div id="backupList" class="backup-list"></div>
           </article>
 
           <article class="settings-card">
@@ -232,16 +236,7 @@
 
           <article id="adminAccessCard" class="settings-card span-two">
             <h3>Web Administrator Access</h3>
-            <p class="muted">The owner can give a future web administrator access without sharing VPS or server credentials.</p>
-            <form id="adminUserForm" class="admin-user-form">
-              <div class="grid three">
-                <label>Name<input id="adminDisplayName" maxlength="120"></label>
-                <label>Email<input id="adminEmail" type="email" maxlength="200" required></label>
-                <label>Temporary password<input id="adminTempPassword" type="password" minlength="12" required></label>
-              </div>
-              <button type="submit">Add Web Administrator</button>
-              <p id="adminUserError" class="error" aria-live="polite"></p>
-            </form>
+            <p class="muted">Future web administrators can use the same Owner Portal without receiving VPS credentials. Account provisioning remains owner-controlled.</p>
             <div id="adminUsersList" class="admin-users"></div>
           </article>
 

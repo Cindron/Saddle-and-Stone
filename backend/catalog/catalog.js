@@ -22,7 +22,10 @@ async function load(){
     state.items=catalog.items||[];
     state.sales=sales.sales||[];
     buildFilters();
-    const itemSlug=new URLSearchParams(location.search).get("item");
+    const params=new URLSearchParams(location.search);
+    const requestedSale=params.get("sale");
+    if(requestedSale&&[...$("saleFilter").options].some(o=>o.value===requestedSale))$("saleFilter").value=requestedSale;
+    const itemSlug=params.get("item");
     if(itemSlug) await showItem(itemSlug,false);
     else showBrowse(false);
   }catch(err){
