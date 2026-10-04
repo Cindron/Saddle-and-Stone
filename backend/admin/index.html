@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <title>Saddle & Stone Owner Portal</title>
-  <link rel="stylesheet" href="./admin.css?v=0.11.1">
+  <link rel="stylesheet" href="./admin.css?v=0.12.1">
 </head>
 <body>
   <main class="shell">
@@ -240,9 +240,21 @@
           </article>
 
           <article id="adminAccessCard" class="settings-card span-two">
-            <h3>Web Administrator Access</h3>
-            <p class="muted">Future web administrators can use the same Owner Portal without receiving VPS credentials. Account provisioning remains owner-controlled.</p>
+            <h3>Support &amp; Administrator Access</h3>
+            <p class="muted">Use named administrator accounts instead of a hidden back door. Every account is visible here, and the owner can revoke non-owner access at any time.</p>
+            <form id="adminUserForm" class="admin-user-form">
+              <div class="grid three">
+                <label>Name<input id="adminDisplayName" maxlength="120" placeholder="Cindron Support"></label>
+                <label>Email<input id="adminEmail" type="email" maxlength="200" required placeholder="support@example.com"></label>
+                <label>Temporary password<input id="adminTempPassword" type="password" minlength="12" required autocomplete="new-password"></label>
+              </div>
+              <div class="editor-actions">
+                <button type="submit">Add Administrator</button>
+              </div>
+              <p id="adminUserError" class="error" aria-live="polite"></p>
+            </form>
             <div id="adminUsersList" class="admin-users"></div>
+            <p class="muted admin-access-note">Administrator accounts can manage catalog, sales, inquiries, backups and site settings. Only the owner can add or remove other administrators.</p>
           </article>
 
           <article class="settings-card span-two">
@@ -256,6 +268,6 @@
       <p id="portalMessage" class="toast hidden" aria-live="polite"></p>
     </section>
   </main>
-  <script src="./admin.js?v=0.11.1" defer></script>
+  <script src="./admin.js?v=0.12.1" defer></script>
 </body>
 </html>

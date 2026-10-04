@@ -424,3 +424,21 @@ Deployment requirements:
   on the client-owned domain during the transition.
 - No application data migration is required because the database and uploaded
   files remain on the same server.
+
+
+## v0.12.1 — transparent support access
+
+The Owner Portal now exposes named administrator-account management to the
+client owner.
+
+- Faith can change her own password from Maintenance at any time.
+- The owner can add a separate support/web-administrator account with its own
+  credentials.
+- All administrator accounts are visibly listed in the portal.
+- Non-owner administrator access can be revoked by the owner at any time.
+- There is no hidden password, bypass account or authentication back door.
+- Support administrators can maintain content and settings but cannot remove or
+  replace the owner account.
+
+This preserves ongoing support access without weakening client ownership or
+creating an undisclosed recovery path.

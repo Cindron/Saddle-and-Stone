@@ -166,8 +166,37 @@ function renderBackups(backups){
 async function loadMaintenanceAccess(){
   const data=await api("/api/admin/users");
   const users=data.users||[];
-  $("adminUsersList").innerHTML=users.map(u=>'<div class="admin-user"><div class="admin-user-main"><strong>'+esc(u.display_name||u.email)+'<span class="role-badge">'+esc(u.role)+'</span></strong><small>'+esc(u.email)+'</small></div></div>').join("");
+  $("adminUsersList").innerHTML=users.map(u=>{
+    const remove=u.role==="owner"?"":'<button type="button" class="ghost danger-outline" data-remove-admin="'+u.id+'">Remove Access</button>';
+    return '<div class="admin-user"><div class="admin-user-main"><strong>'+esc(u.display_name||u.email)+'<span class="role-badge">'+esc(u.role)+'</span></strong><small>'+esc(u.email)+'</small></div>'+remove+'</div>';
+  }).join("");
+  document.querySelectorAll("[data-remove-admin]").forEach(btn=>btn.addEventListener("click",async()=>{
+    if(!confirm("Remove this administrator's access?"))return;
+    try{
+      await api("/api/admin/users/"+btn.dataset.removeAdmin,{method:"DELETE"});
+      await loadMaintenanceAccess();
+      flash("Administrator access removed.");
+    }catch(err){flash(err.message)}
+  }));
 }
+$("adminUserForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  $("adminUserError").textContent="";
+  try{
+    await api("/api/admin/users",{method:"POST",body:JSON.stringify({
+      display_name:$("adminDisplayName").value,
+      email:$("adminEmail").value,
+      password:$("adminTempPassword").value
+    })});
+    $("adminDisplayName").value="";
+    $("adminEmail").value="";
+    $("adminTempPassword").value="";
+    await loadMaintenanceAccess();
+    flash("Administrator added.");
+  }catch(err){
+    $("adminUserError").textContent=err.message;
+  }
+});
 $("createBackupBtn").addEventListener("click",async()=>{const btn=$("createBackupBtn");btn.disabled=true;btn.textContent="Creating…";try{await api("/api/admin/backups",{method:"POST"});await loadMaintenance();flash("Backup created.")}catch(err){flash(err.message)}finally{btn.disabled=false;btn.textContent="Create Backup Now"}});
 
 $("siteSettingsForm").addEventListener("submit",async e=>{e.preventDefault();try{const body={business_name:$("settingBusinessName").value,tagline:$("settingTagline").value,phone:$("settingPhone").value,email:$("settingEmail").value,service_area:$("settingServiceArea").value,instagram:$("settingInstagram").value,facebook:$("settingFacebook").value};const data=await api("/api/admin/site-settings",{method:"PUT",body:JSON.stringify(body)});state.settings=data.settings||body;flash("Site details saved.")}catch(err){flash(err.message)}});
