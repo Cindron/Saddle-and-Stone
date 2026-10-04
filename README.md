@@ -1,6 +1,6 @@
 # Saddle & Stone Estate Sales — v0.7.1
 
-Preview: https://saddleandstone.cindron.ca
+Live domain: https://saddleandstoneestates.ca
 
 The staging site remains `noindex, nofollow`.
 
@@ -410,3 +410,17 @@ Owner workflow:
 
 The first account created in a fresh installation is explicitly assigned the
 owner role, preserving portability during future client-owned deployment.
+
+
+## v0.12.0 — client domain migration
+
+Primary client domain is now **saddleandstoneestates.ca**.
+
+Deployment requirements:
+- Set backend `APP_ORIGIN=https://saddleandstoneestates.ca`.
+- Serve the existing public site, Owner Portal, Catalog, Calendar, API and uploads
+  from the new domain.
+- Keep `saddleandstone.cindron.ca` as a permanent redirect to the matching path
+  on the client-owned domain during the transition.
+- No application data migration is required because the database and uploaded
+  files remain on the same server.

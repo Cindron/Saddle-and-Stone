@@ -2,7 +2,7 @@
 # This preserves the approved public site for every path except the explicitly
 # isolated backend paths below.
 
-saddleandstone.cindron.ca {
+saddleandstoneestates.ca {
     @owner path /owner /owner/*
     handle @owner {
         reverse_proxy saddle-stone-backend:8787
@@ -32,4 +32,10 @@ saddleandstone.cindron.ca {
     handle {
         reverse_proxy saddle-stone-web:80
     }
+}
+
+
+# Legacy staging redirect after the client domain is live.
+saddleandstone.cindron.ca {
+    redir https://saddleandstoneestates.ca{uri} permanent
 }

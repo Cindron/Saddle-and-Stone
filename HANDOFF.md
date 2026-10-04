@@ -22,7 +22,7 @@ required Cindron account in the application.
 
 ## Domain change
 
-The application must never depend on `saddleandstone.cindron.ca` in code.
+The application must never depend on a Cindron staging hostname in code.
 
 When the client purchases a domain:
 
@@ -65,3 +65,16 @@ Once the client confirms the new server is working:
 5. Remove the old hosted copy after the agreed retention period.
 
 The goal is a clean handoff with no technical lock-in.
+
+
+## Current client domain
+
+The current production hostname is:
+
+```text
+saddleandstoneestates.ca
+```
+
+The former Cindron staging hostname may remain only as an HTTP permanent redirect.
+Runtime origin checks are configured through `APP_ORIGIN`, so future domain
+changes do not require application-code changes.
