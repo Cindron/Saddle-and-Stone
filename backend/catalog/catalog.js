@@ -5,6 +5,21 @@ function esc(v=""){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":
 function money(cents){if(cents===null||cents===undefined)return"Price on request";return new Intl.NumberFormat("en-CA",{style:"currency",currency:"CAD"}).format(cents/100)}
 function shortText(v,max=115){const s=String(v||"").trim();return s.length>max?s.slice(0,max-1).trim()+"…":s}
 function titleCase(v){return String(v||"").replace(/(^|\s)\S/g,m=>m.toUpperCase())}
+function setCatalogSeo(item=null){
+  const base="https://saddleandstoneestates.ca";
+  const canonical=item?base+"/catalog/?item="+encodeURIComponent(item.slug):base+"/catalog/";
+  const title=item?item.title+" | Saddle & Stone Estate Sales":"Estate Sale Catalog & Vintage Finds | Saddle & Stone";
+  const description=item
+    ? shortText(item.description||item.condition_text||("Browse "+item.title+" from Saddle & Stone Estate Sales."),155)
+    : "Browse vintage, antique, furniture, decor and estate-sale finds from Saddle & Stone Estate Sales in Peterborough, Kawartha Lakes and Uxbridge.";
+  document.title=title;
+  const desc=document.querySelector('meta[name="description"]');if(desc)desc.content=description;
+  const canonicalLink=$("canonicalLink");if(canonicalLink)canonicalLink.href=canonical;
+  const ogTitle=$("ogTitle");if(ogTitle)ogTitle.content=title;
+  const ogDescription=$("ogDescription");if(ogDescription)ogDescription.content=description;
+  const ogUrl=$("ogUrl");if(ogUrl)ogUrl.content=canonical;
+  const ogImage=$("ogImage");if(ogImage)ogImage.content=item?.images?.[0]?.url?base+item.images[0].url:base+"/assets/saddle-stone-logo-v10.png?rev=20260930a";
+}
 
 async function getJson(url,options={}){
   const res=await fetch(url,{...options,headers:{"Content-Type":"application/json",...(options.headers||{})}});
@@ -89,7 +104,7 @@ function showBrowse(push=true){
   $("itemView").classList.add("hidden");
   $("browseView").classList.remove("hidden");
   if(push) history.pushState({view:"browse"},"","/catalog/");
-  document.title="Catalog | Saddle & Stone Estate Sales";
+  setCatalogSeo();
   render();
   window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -102,7 +117,7 @@ async function showItem(slug,push=true){
     $("browseView").classList.add("hidden");
     $("itemView").classList.remove("hidden");
     if(push) history.pushState({view:"item",slug},"","/catalog/?item="+encodeURIComponent(slug));
-    document.title=data.item.title+" | Saddle & Stone Estate Sales";
+    setCatalogSeo(data.item);
     window.scrollTo({top:0,behavior:"smooth"});
   }catch(err){
     $("catalogNotice").textContent=err.message;

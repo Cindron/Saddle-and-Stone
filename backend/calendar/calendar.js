@@ -5,6 +5,40 @@ function esc(v=""){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":
 function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
 function fmtDate(v){if(!v)return"";const d=new Date(v);return Number.isNaN(d.getTime())?"":new Intl.DateTimeFormat("en-CA",{month:"short",day:"numeric",year:"numeric"}).format(d)}
 function locationText(s){return [s.city,s.region].filter(Boolean).join(", ")||s.address_public||"Location to be announced"}
+function updateEventStructuredData(){
+  const node=$("eventStructuredData");if(!node)return;
+  const graph=sales.filter(s=>s.start_at).map(s=>{
+    const event={
+      "@type":"Event",
+      "name":s.title,
+      "startDate":s.start_at,
+      "eventStatus":"https://schema.org/EventScheduled",
+      "eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
+      "url":"https://saddleandstoneestates.ca/catalog/?sale="+encodeURIComponent(s.slug),
+      "description":s.summary||("Estate sale presented by Saddle & Stone Estate Sales in "+locationText(s)+"."),
+      "organizer":{
+        "@type":"Organization",
+        "name":"Saddle & Stone Estate Sales",
+        "url":"https://saddleandstoneestates.ca/"
+      }
+    };
+    if(s.end_at)event.endDate=s.end_at;
+    if(s.city||s.region||s.address_public){
+      event.location={
+        "@type":"Place",
+        "name":s.address_public||locationText(s),
+        "address":{
+          "@type":"PostalAddress",
+          "addressLocality":s.city||"",
+          "addressRegion":s.region||"Ontario",
+          "addressCountry":"CA"
+        }
+      };
+    }
+    return event;
+  });
+  node.textContent=JSON.stringify({"@context":"https://schema.org","@graph":graph});
+}
 function render(){
   $("monthTitle").textContent=new Intl.DateTimeFormat("en-CA",{month:"long",year:"numeric"}).format(cursor);
   const y=cursor.getFullYear(),m=cursor.getMonth(),first=new Date(y,m,1),start=new Date(y,m,1-first.getDay()),today=new Date();today.setHours(0,0,0,0);
@@ -26,6 +60,7 @@ function render(){
 
   const sorted=[...sales].sort((a,b)=>new Date(a.start_at||0)-new Date(b.start_at||0));
   $("emptyState").classList.toggle("hidden",sorted.length>0);
+  updateEventStructuredData();
   $("salesList").innerHTML=sorted.map(s=>'<article class="sale-card"><div class="sale-date">'+esc(fmtDate(s.start_at))+(s.end_at&&s.end_at!==s.start_at?" – "+esc(fmtDate(s.end_at)):"")+'</div><h3>'+esc(s.title)+'</h3><p>'+esc(s.summary||"Estate sale details coming soon.")+'</p><div class="sale-location">'+esc(locationText(s))+'</div><a class="catalog-link" href="/catalog/?sale='+encodeURIComponent(s.slug)+'">Browse this collection →</a></article>').join("");
 }
 async function load(){
