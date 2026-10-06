@@ -1,2 +1,6 @@
 User-agent: *
-Disallow: /
+Allow: /
+Disallow: /owner/
+Disallow: /api/
+
+Sitemap: https://saddleandstoneestates.ca/sitemap.xml
