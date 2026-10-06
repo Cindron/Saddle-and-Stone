@@ -113,7 +113,7 @@ try {
   const catalogHtml = await catalogPage.text();
   if (
     !catalogPage.ok ||
-    !catalogHtml.includes("<title>Catalog | Saddle & Stone Estate Sales</title>") ||
+    !catalogHtml.includes("<title>Estate Sale Catalog &amp; Vintage Finds | Saddle &amp; Stone</title>") ||
     !catalogHtml.includes('id="catalogGrid"') ||
     catalogHtml.includes('content="noindex')
   ) {
