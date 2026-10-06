@@ -103,12 +103,19 @@ try {
     throw new Error("Public catalog read failed.");
   }
 
+  const sitemap = await fetch(`http://127.0.0.1:${port}/sitemap.xml`);
+  const sitemapXml = await sitemap.text();
+  if (!sitemap.ok || !sitemapXml.includes("/catalog/?item=" + item.data.item.slug)) {
+    throw new Error("Dynamic sitemap failed.");
+  }
+
   const catalogPage = await fetch(`http://127.0.0.1:${port}/catalog/`);
   const catalogHtml = await catalogPage.text();
   if (
     !catalogPage.ok ||
     !catalogHtml.includes("<title>Catalog | Saddle & Stone Estate Sales</title>") ||
-    !catalogHtml.includes('id="catalogGrid"')
+    !catalogHtml.includes('id="catalogGrid"') ||
+    catalogHtml.includes('content="noindex')
   ) {
     throw new Error("Customer catalog shell failed.");
   }
@@ -165,6 +172,9 @@ try {
   const calendarHtml = await calendarPage.text();
   if (!calendarPage.ok || !calendarHtml.includes('id="calendarGrid"')) {
     throw new Error("Calendar shell failed.");
+  }
+  if (calendarHtml.includes('content="noindex')) {
+    throw new Error("Calendar unexpectedly noindexed.");
   }
 
   const backup = await request("/api/admin/backups", {

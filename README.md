@@ -442,3 +442,28 @@ client owner.
 
 This preserves ongoing support access without weakening client ownership or
 creating an undisclosed recovery path.
+
+
+## v0.13.0 — production SEO launch
+
+Technical SEO has been switched from staging to production mode for
+saddleandstoneestates.ca.
+
+Implemented:
+- Removed public noindex/nofollow directives.
+- Public robots.txt now allows crawling and references /sitemap.xml.
+- Dynamic XML sitemap includes core pages plus every non-hidden catalog item.
+- Canonical URLs on Home, About, Services, Sales, Contact, Catalog and Calendar.
+- Page-specific titles and local-search meta descriptions.
+- Open Graph/social sharing metadata.
+- Organization/WebSite structured data on the homepage.
+- Breadcrumb structured data on core interior pages.
+- Dynamic Event structured data for published estate sales.
+- Catalog item pages update title, description, canonical and social metadata.
+- Owner Portal and API responses remain explicitly noindex.
+- Production caching enabled for stable static assets and public backend shells.
+
+Search indexing is never guaranteed by code alone. After deployment, add the
+domain property to Google Search Console, submit:
+https://saddleandstoneestates.ca/sitemap.xml
+and request indexing for the homepage and other highest-priority pages.

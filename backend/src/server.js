@@ -199,27 +199,26 @@ app.use("/owner", express.static(path.join(process.cwd(), "admin"), {
   }
 }));
 
-// Customer catalog shell. It is intentionally not linked from the approved
-// public website yet; Caddy can expose /catalog separately for review.
+// Public customer catalog shell.
 app.use("/catalog", express.static(path.join(process.cwd(), "catalog"), {
   index: "index.html",
   fallthrough: true,
-  etag: false,
-  maxAge: 0,
+  etag: true,
+  maxAge: "5m",
   dotfiles: "deny",
   setHeaders(res) {
-    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+    res.setHeader("Cache-Control", "public, max-age=300");
   }
 }));
 
 app.use("/calendar", express.static(path.join(process.cwd(), "calendar"), {
   index: "index.html",
   fallthrough: true,
-  etag: false,
-  maxAge: 0,
+  etag: true,
+  maxAge: "5m",
   dotfiles: "deny",
   setHeaders(res) {
-    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+    res.setHeader("Cache-Control", "public, max-age=300");
   }
 }));
 
