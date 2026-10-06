@@ -147,6 +147,44 @@ app.get("/ready", (_req, res) => {
   }
 });
 
+app.get("/sitemap.xml", (_req, res) => {
+  const base = (config.appOrigin || "https://saddleandstoneestates.ca").replace(/\/+$/, "");
+  const staticUrls = [
+    base + "/",
+    base + "/about.html",
+    base + "/services.html",
+    base + "/sales.html",
+    base + "/contact.html",
+    base + "/catalog/",
+    base + "/calendar/"
+  ];
+
+  const itemUrls = db.prepare(`
+    SELECT slug, updated_at
+    FROM items
+    WHERE status <> 'hidden'
+    ORDER BY updated_at DESC
+  `).all();
+
+  const xml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...staticUrls.map(url => '  <url><loc>' + url + '</loc></url>'),
+    ...itemUrls.map(row => {
+      const loc = base + "/catalog/?item=" + encodeURIComponent(row.slug);
+      const lastmod = row.updated_at
+        ? '<lastmod>' + String(row.updated_at).replace(" ", "T") + 'Z</lastmod>'
+        : '';
+      return '  <url><loc>' + loc + '</loc>' + lastmod + '</url>';
+    }),
+    '</urlset>'
+  ].join("\n");
+
+  res.type("application/xml");
+  res.setHeader("Cache-Control", "public, max-age=300");
+  res.send(xml);
+});
+
 // Private owner portal UI. The API remains the security boundary; this static
 // shell contains no credentials and exposes no data unless authentication succeeds.
 app.use("/owner", express.static(path.join(process.cwd(), "admin"), {
@@ -157,6 +195,7 @@ app.use("/owner", express.static(path.join(process.cwd(), "admin"), {
   dotfiles: "deny",
   setHeaders(res) {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+    res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
   }
 }));
 
@@ -193,6 +232,11 @@ app.use("/uploads", express.static(config.uploadDir, {
   dotfiles: "deny",
   index: false
 }));
+
+app.use("/api", (_req, res, next) => {
+  res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
+  next();
+});
 
 app.post("/api/auth/login", loginLimiter, (req, res) => {
   const email = normalizeEmail(req.body?.email);

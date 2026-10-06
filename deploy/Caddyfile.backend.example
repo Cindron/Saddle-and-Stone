@@ -18,6 +18,11 @@ saddleandstoneestates.ca {
         reverse_proxy saddle-stone-backend:8787
     }
 
+    @sitemap path /sitemap.xml
+    handle @sitemap {
+        reverse_proxy saddle-stone-backend:8787
+    }
+
     @api path /api/*
     handle @api {
         reverse_proxy saddle-stone-backend:8787
