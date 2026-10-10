@@ -1,0 +1,32 @@
+name: Saddle and Stone encrypted archive handoff
+
+on:
+  push:
+    branches:
+      - archive-transfer-20261010
+    paths:
+      - 'archive-transfer/*.enc'
+
+permissions:
+  contents: read
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out transfer branch
+        uses: actions/checkout@v4
+      - name: Confirm encrypted archive only
+        run: |
+          files=(archive-transfer/*.enc)
+          test -f "${files[0]}"
+          test "${#files[@]}" -eq 1
+      - name: Package as short-lived download artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: saddle-stone-encrypted-handoff
+          path: archive-transfer/*.enc
+          if-no-files-found: error
+          retention-days: 2
+          compression-level: 0
